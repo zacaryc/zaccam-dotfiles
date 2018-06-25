@@ -1,0 +1,63 @@
+### Section for configuring miscelleneous Subversion options.
+[miscellany]
+enable-auto-props = yes
+
+### Section for configuring automatic properties.
+[auto-props]
+## Text types
+*.alice = svn:eol-style=native
+*.spec = svn:eol-style=native
+*.java = svn:eol-style=native;svn:keywords=Id URL Rev
+*.cfg = svn:eol-style=native
+*.xml = svn:eol-style=native;svn:mime-type=text/xml;svn:keywords=Id URL Rev
+ChangeLog = svn:eol-style=native
+*.pdf = svn:mime-type=application/pdf
+*.sh = svn:eol-style=native;svn:executable
+*.csv = svn:eol-style=native
+*.txt = svn:eol-style=native
+*.css = svn:eol-style=native
+*.js = svn:eol-style=native
+*.jsp = svn:eol-style=native
+*.pl = svn:eol-style=native
+*.pm = svn:eol-style=native
+*.py = svn:eol-style=native
+*.sql = svn:eol-style=native
+
+
+## Image types
+*.gif = svn:mime-type=image/gif
+*.ico = svn:mime-type=image/vnd.microsoft.icon
+*.jpg = svn:mime-type=image/jpeg
+*.jpeg = svn:mime-type=image/jpeg
+*.jpg = svn:mime-type=image/jpeg
+*.png = svn:mime-type=image/png
+*.svg = svn:mime-type=image/svg+xml
+
+## Microsoft Office types
+*.doc = svn:mime-type=application/msword
+*.dot = svn:mime-type=application/msword
+*.docx = svn:mime-type=application/vnd.openxmlformats-officedocument.wordprocessingml.document
+*.dotx = svn:mime-type=application/vnd.openxmlformats-officedocument.wordprocessingml.template
+*.docm = svn:mime-type=application/vnd.ms-word.document.macroEnabled.12
+*.dotm = svn:mime-type=application/vnd.ms-word.template.macroEnabled.12
+*.xls = svn:mime-type=application/vnd.ms-excel
+*.xlt = svn:mime-type=application/vnd.ms-excel
+*.xla = svn:mime-type=application/vnd.ms-excel
+*.xlsx = svn:mime-type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+*.xltx = svn:mime-type=application/vnd.openxmlformats-officedocument.spreadsheetml.template
+*.xlsm = svn:mime-type=application/vnd.ms-excel.sheet.macroEnabled.12
+*.xltm = svn:mime-type=application/vnd.ms-excel.template.macroEnabled.12
+*.xlam = svn:mime-type=application/vnd.ms-excel.addin.macroEnabled.12
+*.xlsb = svn:mime-type=application/vnd.ms-excel.sheet.binary.macroEnabled.12
+*.ppt = svn:mime-type=application/vnd.ms-powerpoint
+*.pot = svn:mime-type=application/vnd.ms-powerpoint
+*.pps = svn:mime-type=application/vnd.ms-powerpoint
+*.ppa = svn:mime-type=application/vnd.ms-powerpoint
+*.pptx = svn:mime-type=application/vnd.openxmlformats-officedocument.presentationml.presentation
+*.potx = svn:mime-type=application/vnd.openxmlformats-officedocument.presentationml.template
+*.ppsx = svn:mime-type=application/vnd.openxmlformats-officedocument.presentationml.slideshow
+*.ppam = svn:mime-type=application/vnd.ms-powerpoint.addin.macroEnabled.12
+*.pptm = svn:mime-type=application/vnd.ms-powerpoint.presentation.macroEnabled.12
+*.potm = svn:mime-type=application/vnd.ms-powerpoint.template.macroEnabled.12
+*.ppsm = svn:mime-type=application/vnd.ms-powerpoint.slideshow.macroEnabled.12
+*.eot = svn:mime-type=application/vnd.ms-fontobject

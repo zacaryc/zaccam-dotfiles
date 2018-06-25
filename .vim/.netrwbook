@@ -1,0 +1,1 @@
+let g:netrw_bookmarklist= ['/data01/zaccam/puppet', '/home/zaccam', '/home/zaccam/.vim']
