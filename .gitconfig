@@ -1,14 +1,14 @@
 [user]
-	name = Zachary Campbell
-	email = Zachary.Campbell@nasdaq.com
+    name = Zac Campbell
+    email = zacaryc24@gmail.com
 [core]
-	eol = auto
-	autocrlf = false
+    eol = auto
+    autocrlf = false
     editor = vim
-	excludesfile = /home/zaccam/.global_gitignore
+    excludesfile = /home/zaccam/.global_gitignore
 [push]
-	default = simple
+    default = simple
 [mergetool]
-	keepBackup = false
+    keepBackup = false
 [alias]
-	prettylog = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(yellow)%d%C(reset)' --all
+    prettylog = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(yellow)%d%C(reset)' --all
