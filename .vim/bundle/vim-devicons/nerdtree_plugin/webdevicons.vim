@@ -1,4 +1,4 @@
-" Version: 0.9.3
+" Version: 0.10.0
 " Webpage: https://github.com/ryanoasis/vim-devicons
 " Maintainer: Ryan McIntyre <ryanoasis@gmail.com>
 " License: see LICENSE
@@ -29,7 +29,19 @@ endif
 " Temporary (hopefully) fix for glyph issues in gvim (proper fix is with the
 " actual font patcher)
 if !exists('g:webdevicons_gui_glyph_fix')
-  let g:webdevicons_gui_glyph_fix = 1
+  if has('gui_running')
+    let g:webdevicons_gui_glyph_fix = 1
+  else
+    let g:webdevicons_gui_glyph_fix = 0
+  endif
+endif
+
+if !exists('g:DevIconsEnableNERDTreeRedraw')
+  if has('gui_running')
+    let g:DevIconsEnableNERDTreeRedraw = 1
+  else
+    let g:DevIconsEnableNERDTreeRedraw = 0
+  endif
 endif
 
 if g:webdevicons_enable_nerdtree == 1
@@ -85,30 +97,39 @@ function! WebDevIconsNERDTreeChangeRootHandler(node)
   call b:NERDTree.changeRoot(a:node)
   call NERDTreeRender()
   call a:node.putCursorHere(0, 0)
-  redraw!
+  if g:DevIconsEnableNERDTreeRedraw ==# 1
+    redraw!
+  endif
 endfunction
 
 " NERDTree-u
 " scope: global
 function! WebDevIconsNERDTreeUpDirCurrentRootClosedHandler()
   call nerdtree#ui_glue#upDir(0)
-  redraw!
+  if g:DevIconsEnableNERDTreeRedraw ==# 1
+    redraw!
+  endif
 endfunction
 
 function! WebDevIconsNERDTreeDirUpdateFlags(node, glyph)
   let path = a:node.path
   let isOpen = a:node.isOpen
-  let padding = g:WebDevIconsNerdTreeAfterGlyphPadding
-  let prePadding = ''
+  let postPadding = g:WebDevIconsNerdTreeAfterGlyphPadding
+  let prePadding = g:WebDevIconsNerdTreeBeforeGlyphPadding
   let hasGitFlags = (len(path.flagSet._flagsForScope('git')) > 0)
   let hasGitNerdTreePlugin = (exists('g:loaded_nerdtree_git_status') == 1)
+  let collapsesToSameLine = (exists('g:NERDTreeCascadeSingleChildDir') == 1)
+  let dirHasOnlyOneChildDir = 0
 
-  if g:WebDevIconsUnicodeGlyphDoubleWidth == 0
-    let padding = ''
+  if collapsesToSameLine
+    " need to call to determin children:
+    call a:node._initChildren(1)
+    let dirHasOnlyOneChildDir = (a:node.getChildCount() ==# 1 && a:node.children[0].path.isDirectory)
   endif
 
-  if hasGitFlags && g:WebDevIconsUnicodeGlyphDoubleWidth == 1
-    let prePadding = ' '
+  " properly set collapsed/combined directory display to opened glyph
+  if collapsesToSameLine && dirHasOnlyOneChildDir
+    call WebDevIconsNERDTreeDirOpen(a:node.children[0])
   endif
 
   " align vertically at the same level: non git-flag nodes with git-flag nodes
@@ -116,13 +137,15 @@ function! WebDevIconsNERDTreeDirUpdateFlags(node, glyph)
     let prePadding .= '  '
   endif
 
-  let flag = prePadding . a:glyph . padding
+  let flag = prePadding . a:glyph . postPadding
 
   call a:node.path.flagSet.clearFlags('webdevicons')
 
   if flag !=? ''
     call a:node.path.flagSet.addFlag('webdevicons', flag)
+    "echom "added flag of " . flag
     call a:node.path.refreshFlags(b:NERDTree)
+    "echom "flagset is now " . string(a:node.path.flagSet)
   endif
 endfunction
 
@@ -179,7 +202,9 @@ function! WebDevIconsNERDTreeMapActivateNode(node)
   " continue with normal activate logic
   call a:node.activate()
   " glyph change possible artifact clean-up
-  redraw!
+  if g:DevIconsEnableNERDTreeRedraw ==# 1
+    redraw!
+  endif
 endfunction
 
 function! WebDevIconsNERDTreeMapOpenRecursively(node)
@@ -190,7 +215,9 @@ function! WebDevIconsNERDTreeMapOpenRecursively(node)
   " continue with normal original logic:
   call b:NERDTree.render()
   " glyph change possible artifact clean-up
-  redraw!
+  if g:DevIconsEnableNERDTreeRedraw ==# 1
+    redraw!
+  endif
   call nerdtree#echo("Recursively opening node. Please wait... DONE")
 endfunction
 
@@ -202,7 +229,9 @@ function! WebDevIconsNERDTreeMapCloseChildren(node)
   call b:NERDTree.render()
   call a:node.putCursorHere(0, 0)
   " glyph change possible artifact clean-up
-  redraw!
+  if g:DevIconsEnableNERDTreeRedraw ==# 1
+    redraw!
+  endif
 endfunction
 
 function! WebDevIconsNERDTreeMapCloseDir(node)
@@ -225,7 +254,9 @@ function! WebDevIconsNERDTreeMapCloseDir(node)
     call b:NERDTree.render()
     call parent.putCursorHere(0, 0)
     " glyph change possible artifact clean-up
-    redraw!
+    if g:DevIconsEnableNERDTreeRedraw ==# 1
+      redraw!
+    endif
   endif
 endfunction
 
@@ -235,7 +266,9 @@ function! WebDevIconsNERDTreeMapUpdirKeepOpen()
   call nerdtree#ui_glue#upDir(1)
   call s:Refresh()
   " glyph change possible artifact clean-up
-  redraw!
+  if g:DevIconsEnableNERDTreeRedraw ==# 1
+    redraw!
+  endif
 endfunction
 
 if g:webdevicons_enable == 1 && g:webdevicons_enable_nerdtree == 1
@@ -298,21 +331,22 @@ if g:webdevicons_enable == 1 && g:webdevicons_enable_nerdtree == 1
 
   " Temporary (hopefully) fix for glyph issues in gvim (proper fix is with the
   " actual font patcher)
-  if g:webdevicons_gui_glyph_fix == 1 && has('gui_running')
+  if g:webdevicons_gui_glyph_fix ==# 1
     call NERDTreeAddKeyMap({
       \ 'key': g:NERDTreeMapChangeRoot,
       \ 'callback': 'WebDevIconsNERDTreeChangeRootHandler',
       \ 'override': 1,
-      \ 'quickhelpText': "change tree root to the\n\"    selected dir\n\"    plus webdevicons redraw\n\"    hack fix",
+      \ 'quickhelpText': "change tree root to the\n\"    selected dir\n\"    plus devicons redraw\n\"    hack fix",
       \ 'scope': 'Node' })
 
     call NERDTreeAddKeyMap({
       \ 'key': g:NERDTreeMapUpdir,
       \ 'callback': 'WebDevIconsNERDTreeUpDirCurrentRootClosedHandler',
       \ 'override': 1,
-      \ 'quickhelpText': "move tree root up a dir\n\"    plus webdevicons redraw\n\"    hack fix",
+      \ 'quickhelpText': "move tree root up a dir\n\"    plus devicons redraw\n\"    hack fix",
       \ 'scope': 'all' })
   endif
+
 endif
 
 " modeline syntax:

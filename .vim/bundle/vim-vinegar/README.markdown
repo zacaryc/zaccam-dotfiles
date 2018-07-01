@@ -32,17 +32,26 @@ to even consider.
   This is great, for example, to quickly initiate a `:grep` of the file or
   directory under the cursor.  There's also `!`, which starts the line off
   with a bang.  Type `!chmod +x` and get `:!chmod +x path/to/file`.
-* Press `cg` or `cl` to `:cd` or `:lcd` to the currently edited directory.
+* Press `y.` to yank an absolute path for the file under the cursor.
 * Press `~` to go home.
 
 ## Installation
 
-If you don't have a preferred installation method, I recommend
-installing [pathogen.vim](https://github.com/tpope/vim-pathogen), and
-then simply copy and paste:
+Install using your favourite package manager, or use Vim's built-in package support:
 
-    cd ~/.vim/bundle
-    git clone git://github.com/tpope/vim-vinegar.git
+    mkdir -p ~/.vim/pack/tpope/start
+    cd ~/.vim/pack/tpope/start
+    git clone https://github.com/tpope/vim-vinegar.git
+
+## Promotion
+
+Like vinegar.vim?  Star the repository on
+[GitHub](https://github.com/tpope/vim-vinegar) and vote for it on
+[vim.org](https://www.vim.org/scripts/script.php?script_id=5671).
+
+Love vinegar.vim?  Follow [tpope](http://tpo.pe/) on
+[GitHub](https://github.com/tpope) and
+[Twitter](http://twitter.com/tpope).
 
 ## License
 

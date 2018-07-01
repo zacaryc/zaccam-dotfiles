@@ -1,4 +1,4 @@
-" MIT License. Copyright (c) 2013-2016 Bailey Ling.
+" MIT License. Copyright (c) 2013-2018 Bailey Ling et al.
 " vim: et ts=2 sts=2 sw=2
 
 scriptencoding utf-8
@@ -57,9 +57,9 @@ function! s:wordcount()
 endfunction
 
 function! s:get_decimal_group()
-  if match(v:lang, '\v\cC|en') > -1
+  if match(get(v:, 'lang', ''), '\v\cC|en') > -1
     return ','
-  elseif match(v:lang, '\v\cde|dk|fr|pt') > -1
+  elseif match(get(v:, 'lang', ''), '\v\cde|dk|fr|pt') > -1
     return '.'
   endif
   return ''

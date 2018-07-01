@@ -1,9 +1,9 @@
-" MIT License. Copyright (c) 2017 Cimbali.
+" MIT License. Copyright (c) 2017-2018 Cimbali et al
 " vim: et ts=2 sts=2 sw=2
 
 scriptencoding utf-8
 
-if !exists('*fugitive#head')
+if !airline#util#has_fugitive()
   finish
 endif
 
@@ -15,21 +15,22 @@ else
 endif
 
 function! airline#extensions#fugitiveline#bufname()
-  if exists('b:fugitive_name')
-    return b:fugitive_name
+  if !exists('b:fugitive_name')
+    let b:fugitive_name = ''
+    try
+      let buffer = fugitive#buffer()
+      if buffer.type('blob')
+        let b:fugitive_name = buffer.repo().translate(buffer.path())
+      endif
+    catch
+    endtry
   endif
 
-  let b:fugitive_name = fnamemodify(bufname('%'), s:fmod)
-
-  try
-    let buffer = fugitive#buffer()
-    if buffer.type('blob')
-      let b:fugitive_name = fnamemodify(buffer.repo().translate(buffer.path()), s:fmod)
-    endif
-  catch
-  endtry
-
-  return b:fugitive_name
+  if empty(b:fugitive_name)
+    return fnamemodify(bufname('%'), s:fmod)
+  else
+    return fnamemodify(b:fugitive_name, s:fmod)
+  endif
 endfunction
 
 function! airline#extensions#fugitiveline#init(ext)
@@ -42,4 +43,3 @@ function! airline#extensions#fugitiveline#init(ext)
   autocmd ShellCmdPost,CmdwinLeave * unlet! b:fugitive_name
   autocmd User AirlineBeforeRefresh unlet! b:fugitive_name
 endfunction
-

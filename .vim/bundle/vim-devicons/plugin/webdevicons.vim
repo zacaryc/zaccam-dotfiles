@@ -1,9 +1,9 @@
-" Version: 0.9.3
+" Version: 0.10.0
 " Webpage: https://github.com/ryanoasis/vim-devicons
 " Maintainer: Ryan McIntyre <ryanoasis@gmail.com>
 " License: see LICENSE
 
-let s:version = '0.9.3'
+let s:version = '0.10.0'
 let s:plugin_home = expand('<sfile>:p:h:h')
 
 " set scriptencoding after 'encoding' and when using multibyte chars
@@ -74,6 +74,18 @@ if !exists('g:webdevicons_conceal_nerdtree_brackets')
   let g:webdevicons_conceal_nerdtree_brackets = 1
 endif
 
+if !exists('g:DevIconsAppendArtifactFix')
+  if has('gui_running')
+    let g:DevIconsAppendArtifactFix = 1
+  else
+    let g:DevIconsAppendArtifactFix = 0
+  endif
+endif
+
+if !exists('g:DevIconsArtifactFixChar')
+  let g:DevIconsArtifactFixChar = " "
+endif
+
 " config options {{{1
 "========================================================================
 
@@ -109,8 +121,12 @@ if !exists('g:WebDevIconsUnicodeGlyphDoubleWidth')
   let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
 endif
 
+if !exists('g:WebDevIconsNerdTreeBeforeGlyphPadding')
+  let g:WebDevIconsNerdTreeBeforeGlyphPadding = ' '
+endif
+
 if !exists('g:WebDevIconsNerdTreeAfterGlyphPadding')
-  let g:WebDevIconsNerdTreeAfterGlyphPadding = '  '
+  let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 endif
 
 if !exists('g:WebDevIconsNerdTreeGitPluginForceVAlign')
@@ -143,8 +159,12 @@ if !exists('g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol')
   endif
 endif
 
+if !exists('g:WebDevIconsUnicodeDecorateFolderNodesSymlinkSymbol')
+  let g:WebDevIconsUnicodeDecorateFolderNodesSymlinkSymbol =  ''
+endif
+
 if !exists('g:DevIconsDefaultFolderOpenSymbol')
-    let g:DevIconsDefaultFolderOpenSymbol = ''
+  let g:DevIconsDefaultFolderOpenSymbol = ''
 endif
 
 " functions {{{1
@@ -279,19 +299,20 @@ function! s:setDictionaries()
         \ 'd'        : '',
         \ 'erl'      : '',
         \ 'hrl'      : '',
-        \ 'vim'      : '',
+        \ 'vim'      : '',
         \ 'ai'       : '',
         \ 'psd'      : '',
         \ 'psb'      : '',
         \ 'ts'       : '',
         \ 'tsx'      : '',
         \ 'jl'       : '',
-        \ 'pp'       : ''
+        \ 'pp'       : '',
+        \ 'vue'      : '﵂'
         \}
 
   let s:file_node_exact_matches = {
-        \ 'exact-match-case-sensitive-1.txt' : 'X1',
-        \ 'exact-match-case-sensitive-2'     : 'X2',
+        \ 'exact-match-case-sensitive-1.txt' : '1',
+        \ 'exact-match-case-sensitive-2'     : '2',
         \ 'gruntfile.coffee'                 : '',
         \ 'gruntfile.js'                     : '',
         \ 'gruntfile.ls'                     : '',
@@ -304,13 +325,18 @@ function! s:setDictionaries()
         \ '.gitignore'                       : '',
         \ '.bashrc'                          : '',
         \ '.zshrc'                           : '',
-        \ '.vimrc'                           : '',
+        \ '.vimrc'                           : '',
+        \ '.gvimrc'                          : '',
+        \ '_vimrc'                           : '',
+        \ '_gvimrc'                          : '',
         \ '.bashprofile'                     : '',
         \ 'favicon.ico'                      : '',
         \ 'license'                          : '',
         \ 'node_modules'                     : '',
         \ 'react.jsx'                        : '',
         \ 'procfile'                         : '',
+        \ 'dockerfile'                       : '',
+        \ 'docker-compose.yml'               : '',
         \}
 
   let s:file_node_pattern_matches = {
@@ -321,6 +347,7 @@ function! s:setDictionaries()
         \ '.*materialize.*\.js$'  : '',
         \ '.*materialize.*\.css$' : '',
         \ '.*mootools.*\.js$'     : '',
+        \ '.*vimrc.*'             : '',
         \ 'Vagrantfile$'          : ''
         \}
 
@@ -408,7 +435,7 @@ function! s:CursorHoldUpdate()
   call b:NERDTree.root.refreshFlags()
   call NERDTreeRender()
 
-  exec l.altwinnr . 'wincmd w'
+  exec l:altwinnr . 'wincmd w'
   exec l:winnr . 'wincmd w'
 endfunction
 
@@ -496,7 +523,7 @@ endfunction
 " scope: local
 function! s:initializeDenite()
   if exists('g:loaded_denite') && g:webdevicons_enable_denite
-    call denite#custom#source('file_rec,file_old,buffer,directory_rec', 'converters', ['devicons_denite_converter'])
+    call denite#custom#source('file_rec,file_mru,file_old,buffer,directory_rec,directory_mru', 'converters', ['devicons_denite_converter'])
   endif
 endfunction
 
@@ -589,10 +616,9 @@ function! webdevicons#softRefresh()
   call s:softRefreshNerdTree()
 endfunction
 
-" a:1 (bufferName), a:2 (isDirectory), a:3 (appendArtifactFix)
+" a:1 (bufferName), a:2 (isDirectory)
 " scope: public
 function! WebDevIconsGetFileTypeSymbol(...)
-  let appendArtifactFix = 1
   if a:0 == 0
     let fileNodeExtension = expand('%:e')
     let fileNode = expand('%:t')
@@ -604,10 +630,6 @@ function! WebDevIconsGetFileTypeSymbol(...)
       let isDirectory = a:2
     else
       let isDirectory = 0
-    endif
-
-    if a:0 == 3
-      let appendArtifactFix = a:3
     endif
   endif
 
@@ -638,16 +660,23 @@ function! WebDevIconsGetFileTypeSymbol(...)
     let symbol = g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol
   endif
 
-  " Temporary (hopefully) fix for glyph issues in gvim (proper fix is with the
-  " actual font patcher)
-  if appendArtifactFix == 1
-    let artifactFix = "\u00A0"
-  else
-    let artifactFix = ""
-  endif
+  let artifactFix = s:DevIconsGetArtifactFix()
 
   return symbol . artifactFix
 
+endfunction
+
+" scope: local
+" Temporary (hopefully) fix for glyph issues in gvim (proper fix is with the
+" actual font patcher)
+function! s:DevIconsGetArtifactFix()
+  if g:DevIconsAppendArtifactFix == 1
+    let artifactFix = g:DevIconsArtifactFixChar
+  else
+    let artifactFix = ''
+  endif
+
+  return artifactFix
 endfunction
 
 " scope: public
@@ -671,9 +700,7 @@ function! WebDevIconsGetFileFormatSymbol(...)
     let fileformat = ''
   endif
 
-  " Temporary (hopefully) fix for glyph issues in gvim (proper fix is with the
-  " actual font patcher)
-  let artifactFix = "\u00A0"
+  let artifactFix = s:DevIconsGetArtifactFix()
 
   return bomb . fileformat . artifactFix
 endfunction
@@ -683,7 +710,8 @@ endfunction
 
 " scope: public
 function! AirlineWebDevIcons(...)
-  let w:airline_section_x = get(w:, 'airline_section_x', g:airline_section_x)
+  let w:airline_section_x = get(w:, 'airline_section_x',
+        \ get(g:, 'airline_section_x', ''))
   let w:airline_section_x .= ' %{WebDevIconsGetFileTypeSymbol()} '
   let hasFileFormatEncodingPart = airline#parts#ffenc() != ''
   if g:webdevicons_enable_airline_statusline_fileformat_symbols && hasFileFormatEncodingPart
@@ -711,17 +739,14 @@ endif
 " scope: public
 function! NERDTreeWebDevIconsRefreshListener(event)
   let path = a:event.subject
-  let padding = g:WebDevIconsNerdTreeAfterGlyphPadding
-  let prePadding = ''
+  let postPadding = g:WebDevIconsNerdTreeAfterGlyphPadding
+  let prePadding = g:WebDevIconsNerdTreeBeforeGlyphPadding
   let hasGitFlags = (len(path.flagSet._flagsForScope('git')) > 0)
   let hasGitNerdTreePlugin = (exists('g:loaded_nerdtree_git_status') == 1)
-
-  if g:WebDevIconsUnicodeGlyphDoubleWidth == 0
-    let padding = ''
-  endif
+  let artifactFix = s:DevIconsGetArtifactFix()
 
   if hasGitFlags && g:WebDevIconsUnicodeGlyphDoubleWidth == 1
-    let prePadding = ' '
+    let prePadding .= ' '
   endif
 
   " align vertically at the same level: non git-flag nodes with git-flag nodes
@@ -730,11 +755,16 @@ function! NERDTreeWebDevIconsRefreshListener(event)
   endif
 
   if !path.isDirectory
-    let flag = prePadding . WebDevIconsGetFileTypeSymbol(path.str()) . padding
+    " Hey we got a regular file, lets get it's proper icon
+    let flag = prePadding . WebDevIconsGetFileTypeSymbol(path.str()) . postPadding
+
   elseif path.isDirectory && g:WebDevIconsUnicodeDecorateFolderNodes == 1
+    " Ok we got a directory, some more tests and checks
     let directoryOpened = 0
 
     if g:DevIconsEnableFoldersOpenClose && len(path.flagSet._flagsForScope('webdevicons')) > 0
+      " did the user set different icons for open and close?
+
       " isOpen is not available on the path listener directly
       " but we added one via overriding particular keymappings for NERDTree
       if has_key(path, 'isOpen') && path.isOpen == 1
@@ -743,18 +773,40 @@ function! NERDTreeWebDevIconsRefreshListener(event)
     endif
 
     if g:WebDevIconsUnicodeDecorateFolderNodesExactMatches == 1
+      " Did the user enable exact matching of folder type/names
+      " think node_modules
       if g:DevIconsEnableFoldersOpenClose && directoryOpened
-        let flag = prePadding . g:DevIconsDefaultFolderOpenSymbol . padding
+        " the folder is open
+        let flag = prePadding . g:DevIconsDefaultFolderOpenSymbol . artifactFix . postPadding
       else
-        let flag = prePadding . WebDevIconsGetFileTypeSymbol(path.str(), path.isDirectory, 0) . padding
+        " the folder is not open
+        if path.isSymLink
+          " We have a symlink
+          let flag = prePadding . g:WebDevIconsUnicodeDecorateFolderNodesSymlinkSymbol . artifactFix . postPadding
+        else
+          " We have a regular folder
+          let flag = prePadding . WebDevIconsGetFileTypeSymbol(path.str(), path.isDirectory) . postPadding
+        endif
       endif
+
     else
+      " the user did not enable exact matching
       if g:DevIconsEnableFoldersOpenClose && directoryOpened
-        let flag = prePadding . g:DevIconsDefaultFolderOpenSymbol . padding
+        " the folder is open
+        let flag = prePadding . g:DevIconsDefaultFolderOpenSymbol . artifactFix . postPadding
       else
-        let flag = prePadding . g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol . padding
+        " the folder is not open
+        if path.isSymLink
+          " We have a symlink
+          let flag = prePadding . g:WebDevIconsUnicodeDecorateFolderNodesSymlinkSymbol . artifactFix . postPadding
+        else
+          " We have a regular folder
+          let flag = prePadding . g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol . artifactFix . postPadding
+        endif
       endif
+
     endif
+
   else
     let flag = ''
   endif
