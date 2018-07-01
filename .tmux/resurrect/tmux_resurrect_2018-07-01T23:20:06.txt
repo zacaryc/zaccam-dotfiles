@@ -1,0 +1,8 @@
+pane	0	1	:zsh	0	:-	1	:/Users/Zac/Projects/OpenSource/blueocean-plugin	1	zsh	:
+pane	0	2	:zsh	1	:*	1	:/Users/Zac/Projects/OpenSource/blueocean-plugin/blueocean-jira/src/main/java/io/jenkins/blueocean/service/embedded/jira	0	vim	:vim BlueJiraIssue.java
+pane	0	2	:zsh	1	:*	2	:/Users/Zac/Projects/OpenSource/blueocean-plugin/blueocean-jira/src/main/java/io/jenkins/blueocean/service/embedded/jira	1	zsh	:
+pane	1	1	:zsh	1	:*	1	:/Users/Zac/Projects/OpenSource/jenkins	1	zsh	:
+window	0	1	0	:-	b23d,178x50,0,0,0
+window	0	2	1	:*	d149,125x50,0,0{87x50,0,0,1,37x50,88,0,7}
+window	1	1	1	:*	b645,178x51,0,0,8
+state	1	0
