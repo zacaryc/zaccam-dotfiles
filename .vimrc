@@ -81,7 +81,7 @@ nnoremap z0 zcz0
 let g:netrw_banner = 0
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
-let g:netrw_winsize = 15
+let g:netrw_winsize = 20
 
 "-----------------------------
 " Fix up for netrw behaviour
@@ -519,7 +519,7 @@ if has("autocmd")
         au!
 
         "au FileType gitcommit :echo fugitive#statusline()
-        au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+        au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0]) | startinsert
     augroup END
     "}}}
     " Latex {{{
