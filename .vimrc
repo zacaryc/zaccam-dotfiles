@@ -2,6 +2,8 @@
 " Zac's VIMRC
 "
 
+let s:darwin = has('mac')
+
 " Package Management {{{
 
 " Pathogen Package Manager
@@ -52,6 +54,10 @@ set formatoptions+=j
 set printoptions=paper:letter
 set dictionary+=/usr/share/dict/words
 set pastetoggle=<localleader>p
+
+" Disable matchparen which jumps the cursor on matching parentheses
+let loaded_matchparen = 1
+
 if exists('+breakindent')
     set breakindent showbreak=\ +
 endif
@@ -82,6 +88,7 @@ let g:netrw_banner = 0
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 20
+let g:netrw_list_hide = &wildignore
 
 "-----------------------------
 " Fix up for netrw behaviour
@@ -124,7 +131,9 @@ let g:hybrid_use_Xresources = 1
 
 set background=dark
 colorscheme hybrid
-set guifont=DejaVuSansMono\ Nerd\ Font
+"colorscheme two-firewatch
+"set guifont=DejaVuSansMono\ Nerd\ Font
+set guifont=Hack\ Nerd\ Font:h13
 let g:airline_theme="hybrid"
 let g:airline_powerline_fonts = 1
 let g:webdevicons_enable_airline_statusline = 1
@@ -184,12 +193,16 @@ function! s:goyo_enter()
     let b:quitting_bang = 0
     autocmd QuitPre <buffer> let b:quitting = 1
     cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
+    if has('gui_running')
+        set fullscreen
+    elseif exists('$TMUX')
+        silent !tmux set status off
+    endif
     Limelight
     GitGutterEnable
 endfunction
 
 function! s:goyo_leave()
-    Limelight!
     " Quit Vim if this is the only remaining buffer
     if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
         if b:quitting_bang
@@ -198,10 +211,14 @@ function! s:goyo_leave()
             qa
         endif
     endif
+    if exists('$TMUX')
+        silent !tmux set status on
+    endif
+    Limelight!
 endfunction
 
-autocmd! User GoyoEnter call <SID>goyo_enter()
-autocmd! User GoyoLeave call <SID>goyo_leave()
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
 "}}}2
 " Plugin: Limelight {{{2
 " Number of preceding/following paragraphs to include (default: 0)
@@ -221,13 +238,25 @@ set updatetime=250
 let g:move_key_modifier = 'C'
 
 " }}}2
+" Plugin: Indent Guide {{{
+
+if exists('g:loaded_indent_guides')
+    " indent-guides
+    let g:indent_guides_start_level = 2
+    let g:indent_guides_guide_size = 1
+    let g:indent_guides_color_change_percent = 5
+    :IndentGuidesEnable
+endif
+
+" }}}
 
 " }}}
 " Buffers on Open {{{
 
 " Return to last edit position when opening files (You want this!)
+" Added exclusion for gitcommit files
 autocmd BufReadPost *
-            \ if line("'\"") > 0 && line("'\"") <= line("$") |
+            \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
             \   exe "normal! g`\"" |
             \ endif
 " Remember info about open buffers on close
@@ -235,41 +264,54 @@ set viminfo^=%
 
 "}}}
 " Mappings {{{
-"remap VIM 0 to first non-blank character
-map 0 ^
 
 " Set leader and local leader
 let mapleader=";"
 let maplocalleader = "\\"
 
+" > General Map {{{2
+
+"remap VIM 0 to first non-blank character
+map 0 ^
 " Disable that goddamn 'Entering Ex mode. Type 'visual' to go to Normal mode.'
 " " that I trigger 40x a day.
 map Q <Nop>
 map q <Nop>
+" Move to matching tags i.e. <...> via tab
+map <tab> %
+
+"}}}2
+" > Normal Mode Map {{{2
 
 " Have capital Y yank til EOL
 nnoremap Y y$
+" Open Netrw Draw
+nnoremap <silent> <Leader>l :call ToggleNetrw()<CR>
+nnoremap <Leader>g :Goyo<CR>
+" Open Tagbar
+nnoremap <Leader>t :TagbarToggle<CR>
 
-let loaded_matchparen = 1
-
-" Move to matching tags i.e. <...> via tab
-map <tab> %
+" }}}2
+" > Command Mode {{{2
 
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
 
-nnoremap <silent> <Leader>l :call ToggleNetrw()<CR>
-nnoremap <Leader>g :Goyo<CR>
+" }}}2
+" > Insert Mode {{{2
+
+" Instead of reaching for the escape key
+inoremap kj <Esc>
+
+" }}}2
+" > Visual Mode {{{2
+vnoremap <Space> I<Space><Esc>gv
+" }}}2
 
 if has('digraphs')
     digraph ./ 8230
 endif
 
-" Instead of reaching for the escape key
-inoremap kj <Esc>
-
-
-vnoremap <Space> I<Space><Esc>gv
 "}}}
 " Code Helping/IDE Mappings {{{
 
@@ -404,6 +446,13 @@ if has("autocmd")
         au BufRead,BufNewFile *.conf set filetype=conf
     augroup END
     "}}}
+    " TMux {{{
+    augroup ft_tmux
+        au!
+
+		autocmd BufNewFile,BufRead {.,}tmux*.conf* setfiletype tmux
+    augroup END
+    " }}}
     " Java {{{
 
     augroup ft_java
@@ -570,8 +619,16 @@ if has("autocmd")
                     \ endif
         autocmd CursorHold,BufWritePost,BufReadPost,BufLeave *
                     \ if !$VIMSWAP && isdirectory(expand("<amatch>:h")) | let &swapfile = &modified | endif
+
+
+        if exists('$TMUX') && !exists('$NORENAME')
+            au BufEnter * if empty(&buftype) | call system('tmux rename-window '.expand('%:t:S')) | endif
+			au VimLeave * call system('tmux set-window automatic-rename on')
+		endif
+
     augroup END
     " }}}
+
 
 endif " has("autocmd")
 
@@ -589,6 +646,21 @@ if version > 800
     silent! helptags ALL
 endif
 "}}}
+" Miscellaneous {{{
+
+"She-Bang
+inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+
+
+" Open in IntelliJ
+if s:darwin
+    nnoremap <silent> <leader>ij
+        \ :call job_start(['/Applications/IntelliJ IDEA.app/Contents/MacOS/idea', expand('%:p')],
+        \ {'in_io': 'null', 'out_io': null, 'err_io': 'null'})<cr>
+endif
+
+
+" }}}
 
 if filereadable(expand("~/.vimrc.local"))
     source ~/.vimrc.local
