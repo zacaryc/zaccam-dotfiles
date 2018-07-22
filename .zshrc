@@ -32,11 +32,11 @@ COMPLETION_WAITING_DOTS="true"
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # HIST_STAMPS="mm/dd/yyyy"
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+ # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git jira)
+plugins=(git jira catimg)
 
 # User configuration
 
@@ -66,9 +66,13 @@ alias cdp="cd ~/Projects"
 function v()
 {
     if [ $# -eq 0 ]; then
-        vim .
+        ranger .
     else
-        vim $@
+        if [ -d $1 ]; then
+            ranger $@
+        else
+            vim $@
+        fi
     fi
 }
 
