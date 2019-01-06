@@ -6,6 +6,9 @@ let s:darwin = has('mac')
 
 " Package Management {{{
 
+" To disable a plugin, add it's bundle name to the following list
+"let g:pathogen_disabled = []
+
 " Pathogen Package Manager
 execute pathogen#infect()
 
@@ -147,7 +150,7 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.space = " "
 
-if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && version >= 700
+if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && v:version >= 700
     let &listchars = "tab:\u21e5\u00b7,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
     let &fillchars = "vert:\u259a,fold:\u00b7"
 else
@@ -248,6 +251,9 @@ if exists('g:loaded_indent_guides')
     :IndentGuidesEnable
 endif
 
+" }}}
+" Plugin: Vim Polyglot {{{
+    let g:polyglot_disabled = ['go']
 " }}}
 
 " }}}
@@ -450,7 +456,7 @@ if has("autocmd")
     augroup ft_tmux
         au!
 
-		autocmd BufNewFile,BufRead {.,}tmux*.conf* setfiletype tmux
+        autocmd BufNewFile,BufRead {.,}tmux*.conf* setfiletype tmux
     augroup END
     " }}}
     " Java {{{
@@ -567,7 +573,6 @@ if has("autocmd")
     augroup ft_gitcommit
         au!
 
-        "au FileType gitcommit :echo fugitive#statusline()
         au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0]) | startinsert
     augroup END
     "}}}
@@ -597,11 +602,6 @@ if has("autocmd")
                     \ let &backupdir = escape(s:path,'\,').','.&backupdir |
                     \ let &backupext = strftime(".%Y%m%d%H%M%S~",getftime(expand("<afile>:p")))
         endif
-
-        autocmd User Fugitive
-                    \ if filereadable(fugitive#buffer().repo().dir('fugitive.vim')) |
-                    \   source `=fugitive#buffer().repo().dir('fugitive.vim')` |
-                    \ endif
 
         autocmd BufNewFile */init.d/*
                     \ if filereadable("/etc/init.d/skeleton") |
@@ -636,7 +636,7 @@ endif " has("autocmd")
 " Generating Help Files {{{
 
 " Only for Vim 8
-if version > 800
+if v:version > 800
     " Load all plugins now.
     " " Plugins need to be added to runtimepath before helptags can be
     " generated.
