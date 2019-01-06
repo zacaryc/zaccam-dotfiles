@@ -62,6 +62,7 @@ alias srcvim="source ~/.vimrc"
 alias gs="ls | grep"
 alias gl="ls -la | grep"
 alias cdp="cd ~/Projects"
+alias cdv="cd ~/.vim"
 
 function v()
 {
