@@ -46,6 +46,10 @@ export PATH="/Users/Zac/anaconda3/bin:$PATH"
 
 source $ZSH/oh-my-zsh.sh
 
+# Auto Update the vim packages
+# source $HOME/zaccam-dotfiles/updates.sh
+
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -64,17 +68,19 @@ alias gl="ls -la | grep"
 alias cdp="cd ~/Projects"
 alias cdv="cd ~/.vim"
 
+DIR_BROWSER=ranger
+command -v ${DIR_BROWSER} >/dev/null 2>&1 || { echo >&2 "${DIR_BROWSER} not found - will use native vim netrw for directory browsing in v()"; DIR_BROWSER=vim }
 function v()
 {
     if [ $# -eq 0 ]; then
-        ranger .
+        ${DIR_BROWSER} .
     else
         if [ -d $1 ]; then
-            ranger $@
+            ${DIR_BROWSER} $@
         else
             vim $@
         fi
     fi
 }
 
-
+vf() { fzf | xargs -r -I % $EDITOR % ;}
