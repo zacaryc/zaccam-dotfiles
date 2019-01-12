@@ -346,9 +346,6 @@ endfunction
 command! TrimWhitespace call TrimWhitespace()
 "}}}
 " Todo {{{
-" ----------------------------------------------------------------------------
-" Todo
-" ----------------------------------------------------------------------------
 function! s:todo() abort
     let entries = []
     for cmd in ['git grep -niI -e TODO -e FIXME 2> /dev/null',
