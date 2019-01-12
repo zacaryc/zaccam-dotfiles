@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
+
+##############################################################################
+# General UI/UX
+##############################################################################
+
+# TODO: Set Computer Name - Copy from ptb
+# sudo scutil --set ComputerName $(ruby -e "print '$(hostname -s)'.capitalize")
+# sudo scutil --set HostName $(ruby -e "print '$(hostname -s)'.downcase")
+
+# Dock
+
+# Set the icon size of Dock items to 36 pixels
+defaults write com.apple.dock tilesize -int 36
+
+# Automatically hide and show the Dock
+defaults write com.apple.dock autohide -bool true
+
+
+defaults write com.googlecode.iterm DimBackgroundWindows -bool true
+defaults write com.googlecode.iterm DimInactiveSplitPanes -bool true
+
+
+##############################################################################
+# Screen
+##############################################################################
+
+# Save screenshots to the deskto
+[ -d "${HOME}/Desktop/Screenshots" ] || mkdir -p "${HOME}/Desktop/Screenshots"
+defaults write com.apple.screencapture location -string "${HOME}/Desktop/Screenshots"
+
+# Show icons for hard drives, servers, and removable media on the desktop
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+
+# Show Status Bar in Finder
+defaults write com.apple.finder ShowStatusBar -bool true
+
+
+
+sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "I WILL FUCK YOU UP!"
+
+
+# Disable Guest Account Access
+sudo sysadminctl -guestAccount off
+
+
+# Set Language and Text Formats
+defaults write NSGlobalDomain AppleLanguages -array-add "en-AU"
+defaults write NSGlobalDomain AppleLocale -string "en_AU@currency=AUD"
+defaults write NSGlobalDomain AppleMeasurementUnits -string Centimeters
+defaults write NSGlobalDomain AppleMetricUnits -bool true
+
+
+# Set timezones - see systemsetup -listtimezones for other values
+systemsetup -settimezone "Australia/Sydney" > /dev/null
+
+
+# System Menu Clock + Battery
+defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM  HH:mm:ss"
+
+
+###############################################################################
+# Kill affected applications                                                  #
+###############################################################################
+
+for app in "Activity Monitor" \
+    "Dock" \
+    "Finder" \
+    "SystemUIServer" \
+    "Terminal"; do
+    killall "${app}" &> /dev/null
+done
