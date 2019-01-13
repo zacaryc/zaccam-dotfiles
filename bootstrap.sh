@@ -69,6 +69,7 @@ function backup() {
 function setup() {
 
     [ -d ~/git/ ] && mkdir -p ~/git/
+    [ -d ~/Projects/ ] && mkdir -p ~/Projects/
 
 }
 

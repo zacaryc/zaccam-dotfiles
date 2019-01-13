@@ -21,6 +21,10 @@ defaults write com.apple.dock tilesize -int 36
 # Automatically hide and show the Dock
 defaults write com.apple.dock autohide -bool true
 
+# Make icons of hidden applications translucent
+defaults write com.apple.dock showhidden -bool true
+# Don't show recent applications in dock
+defaults write com.apple.dock show-recents -bool false
 
 defaults write com.googlecode.iterm DimBackgroundWindows -bool true
 defaults write com.googlecode.iterm DimInactiveSplitPanes -bool true
@@ -30,7 +34,7 @@ defaults write com.googlecode.iterm DimInactiveSplitPanes -bool true
 # Screen
 ##############################################################################
 
-# Save screenshots to the deskto
+# Save screenshots to the desktop
 [ -d "${HOME}/Desktop/Screenshots" ] || mkdir -p "${HOME}/Desktop/Screenshots"
 defaults write com.apple.screencapture location -string "${HOME}/Desktop/Screenshots"
 
@@ -43,8 +47,7 @@ defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 # Show Status Bar in Finder
 defaults write com.apple.finder ShowStatusBar -bool true
 
-
-
+# Set Login Window Status message
 sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "I WILL FUCK YOU UP!"
 
 
