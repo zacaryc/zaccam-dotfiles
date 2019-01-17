@@ -1,9 +1,27 @@
 #!/usr/bin/env bash
 
 
+#############
+# Note:
+# This will only need to run on initial setup and not again
+# @author: Zac
+#############
+
+
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
+
+
+# Define Function =config_defaults=
+
+config_defaults () {
+  printf "%s\n" "${1}" | \
+  while IFS="$(printf '\t')" read domain key type value host; do
+    ${2} defaults ${host} write ${domain} "${key}" ${type} "${value}"
+  done
+}
+
 
 ##############################################################################
 # General UI/UX
@@ -15,60 +33,138 @@ osascript -e 'tell application "System Preferences" to quit'
 
 # Dock
 
-# Set the icon size of Dock items to 36 pixels
-defaults write com.apple.dock tilesize -int 36
+_dockapps='Firefox
+WhatsApp
+Mail
+iTerm'
 
-# Automatically hide and show the Dock
-defaults write com.apple.dock autohide -bool true
+function custom_dock()
+{
 
-# Make icons of hidden applications translucent
-defaults write com.apple.dock showhidden -bool true
-# Don't show recent applications in dock
-defaults write com.apple.dock show-recents -bool false
+	# Set the icon size of Dock items to 36 pixels
+	defaults write com.apple.dock tilesize -int 36
 
-defaults write com.googlecode.iterm DimBackgroundWindows -bool true
-defaults write com.googlecode.iterm DimInactiveSplitPanes -bool true
+	# Automatically hide and show the Dock
+	defaults write com.apple.dock autohide -bool true
 
-
-##############################################################################
-# Screen
-##############################################################################
-
-# Save screenshots to the desktop
-[ -d "${HOME}/Desktop/Screenshots" ] || mkdir -p "${HOME}/Desktop/Screenshots"
-defaults write com.apple.screencapture location -string "${HOME}/Desktop/Screenshots"
-
-# Show icons for hard drives, servers, and removable media on the desktop
-defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
-defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
-defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
-defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
-
-# Show Status Bar in Finder
-defaults write com.apple.finder ShowStatusBar -bool true
-
-# Set Login Window Status message
-sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "I WILL FUCK YOU UP!"
+	# Make icons of hidden applications translucent
+	defaults write com.apple.dock showhidden -bool true
+	# Don't show recent applications in dock
+	defaults write com.apple.dock show-recents -bool false
 
 
-# Disable Guest Account Access
-sudo sysadminctl -guestAccount off
+
+	# Set up persistent apps
+	[ -z "${_dockapps}" ] || defaults delete com.apple.dock "persistent-apps"
+
+	printf "%s\n" "${_dockapps}" | \
+	  while IFS="$(printf '\t')" read app; do
+		if test -e "/Applications/${app}.app"; then
+		  defaults write com.apple.dock "persistent-apps" -array-add \
+			"<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/${app}.app/</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
+		fi
+	  done
+
+  osascript -e 'tell app "Dock" to quit'
+
+}
+
+function custom_iterm()
+{
+	defaults write com.googlecode.iterm DimBackgroundWindows -bool true
+	defaults write com.googlecode.iterm DimInactiveSplitPanes -bool true
+}
+
+function custom_screenshot()
+{
+	# Save screenshots to the desktop
+	[ -d "${HOME}/Desktop/Screenshots" ] || mkdir -p "${HOME}/Desktop/Screenshots"
+	defaults write com.apple.screencapture location -string "${HOME}/Desktop/Screenshots"
+}
+
+function custom_finder()
+{
+	# Show icons for hard drives, servers, and removable media on the desktop
+	defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+	defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+	defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+	defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+
+	# Show Status Bar in Finder
+	defaults write com.apple.finder ShowStatusBar -bool true
+}
+
+function login_access()
+{
+	# Set Login Window Status message
+	sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "I WILL FUCK YOU UP!"
 
 
-# Set Language and Text Formats
-defaults write NSGlobalDomain AppleLanguages -array-add "en-AU"
-defaults write NSGlobalDomain AppleLocale -string "en_AU@currency=AUD"
-defaults write NSGlobalDomain AppleMeasurementUnits -string Centimeters
-defaults write NSGlobalDomain AppleMetricUnits -bool true
+	# Disable Guest Account Access
+	sudo sysadminctl -guestAccount off > /dev/null 2>/dev/null
+}
+
+# Get those basic metric locale settings right so you don't live like the shitty part of the world
+function base_settings()
+{
+	# Set Language and Text Formats
+	defaults write NSGlobalDomain AppleLanguages -array-add "en-AU"
+	defaults write NSGlobalDomain AppleLocale -string "en_AU@currency=AUD"
+	defaults write NSGlobalDomain AppleMeasurementUnits -string Centimeters
+	defaults write NSGlobalDomain AppleMetricUnits -bool true
+
+	# Set timezones - see systemsetup -listtimezones for other values
+	systemsetup -settimezone "Australia/Sydney" > /dev/null
+
+	# System Menu Clock + Battery
+	defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM  HH:mm:ss"
+}
+
+# Customize Sound Settings
+_sound='-globalDomain	com.apple.sound.beep.sound	-string	/System/Library/Sounds/Funk.aiff'
+
+custom_sound () {
+  config_defaults "${_sound}"
+}
 
 
-# Set timezones - see systemsetup -listtimezones for other values
-systemsetup -settimezone "Australia/Sydney" > /dev/null
+_loginitems='/Applications/Alfred 3.app
+/Applications/WhatsApp.app
+/Applications/Flux.app
+/Applications/Steam.app'
+
+custom_loginitems () {
+  printf "%s\n" "${_loginitems}" | \
+  while IFS="$(printf '\t')" read app; do
+    if test -e "$app"; then
+      osascript - "$app" << EOF > /dev/null
+        on run { _app }
+          tell app "System Events"
+            make new login item with properties { hidden: true, path: _app }
+          end tell
+        end run
+EOF
+    fi
+  done
+}
 
 
-# System Menu Clock + Battery
-defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM  HH:mm:ss"
+function configure()
+{
 
+    base_settings
+    custom_dock
+    custom_finder
+    custom_iterm
+    custom_loginitems
+    custom_screenshot
+    custom_sound
+    login_access
+
+}
+
+
+configure;
 
 ###############################################################################
 # Kill affected applications                                                  #
