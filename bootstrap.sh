@@ -29,7 +29,7 @@ function install() {
             ln -sf ~/zaccam-dotfiles/Brewfile ~/Brewfile
             # TODO: Install brew if it doesn't exist
             brew bundle
-            [ -f ~/zaccam-dotfiles/.macos ] || sh ~/zaccam-dotfiles/.macos
+            [ -f ~/zaccam-dotfiles/.macos ] || source ~/zaccam-dotfiles/.macos
             ;;
         'Linux')
             _print_header "This is a linux machine"
