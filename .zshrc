@@ -42,7 +42,8 @@ plugins=(git jira catimg)
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin"
 if [ -d $HOME/.cabal/bin ]; then export PATH="$PATH:$HOME/.cabal/bin"; fi
-export PATH="/Users/Zac/anaconda3/bin:$PATH"
+if which go > /dev/null; then export PATH="$PATH:$(go env GOPATH)/bin"; fi
+if [ -d /Users/Zac/anaconda3/bin ]; then export PATH="/Users/Zac/anaconda3/bin:$PATH"; fi
 
 source $ZSH/oh-my-zsh.sh
 
