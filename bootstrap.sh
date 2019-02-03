@@ -17,6 +17,7 @@ declare -a dotfiles=(
     'gitconfig'
     'global_gitignore'
     'profile'
+    'hushlogin'
 )
 
 # Install: Quick Bootstrap install of dotfiles
