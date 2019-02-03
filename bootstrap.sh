@@ -20,23 +20,53 @@ declare -a dotfiles=(
     'hushlogin'
 )
 
+
+function checkConnectivity() {
+	case "$(curl -s --max-time 2 -I http://google.com | sed 's/^[^ ]*  *\([0-9]\).*/\1/; 1q')" in
+	  [23]) echo "HTTP connectivity is up" && return 0;;
+	  5) echo "The web proxy won't let us through" && return 1;;
+	  *) echo "The network is down or very slow" && return 1;;
+	esac
+}
+
+# For macOS running all of the brew required steps
+function brewsetup() {
+
+	# Check if connectivity is up
+	if ! checkConnectivity; then
+		echo "Cannot continue brew steps without connectivity. Skipping"
+		return 1
+	fi
+
+	# Check if brew is installed
+	if ! which brew >/dev/null; then
+		# If not installed - install via Ruby
+		if which ruby >/dev/null; then
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		else
+			echo "Cannot install brew, Ruby is not installed"
+			return
+		fi
+	fi
+
+	brew bundle
+	brew doctor
+	brew cleanup --force
+}
+
 # Install: Quick Bootstrap install of dotfiles
 function install() {
 
     case $(uname) in
         'Darwin')
-            # TODO: Add in support for macos settings changes
             _print_header "This is a mac - Installing with brewfiles"
             ln -sf ~/zaccam-dotfiles/Brewfile ~/Brewfile
-            # TODO: Install brew if it doesn't exist
-            brew bundle
-            brew doctor
-            brew cleanup --force
+			brewsetup
             [ -f ~/zaccam-dotfiles/.macos ] || source ~/zaccam-dotfiles/.macos
             ;;
         'Linux')
             _print_header "This is a linux machine"
-            # TODO: Linux Package Support
+            # TODO: Linux Package Support - can also include WSL
             echo "No support for package install yet - TODO"
             ;;
     esac
