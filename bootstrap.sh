@@ -30,6 +30,8 @@ function install() {
             ln -sf ~/zaccam-dotfiles/Brewfile ~/Brewfile
             # TODO: Install brew if it doesn't exist
             brew bundle
+            brew doctor
+            brew cleanup --force
             [ -f ~/zaccam-dotfiles/.macos ] || source ~/zaccam-dotfiles/.macos
             ;;
         'Linux')
