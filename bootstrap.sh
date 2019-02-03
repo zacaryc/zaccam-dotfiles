@@ -14,6 +14,7 @@ declare -a dotfiles=(
     'bashrc'
     'bash_aliases'
     'bash_profile'
+    'bash_logout'
     'gitconfig'
     'global_gitignore'
     'profile'
@@ -21,6 +22,8 @@ declare -a dotfiles=(
 )
 
 
+# Check if there is connectivity - ping can be blocked by some firewalls thus
+# this implementation
 function checkConnectivity() {
 	case "$(curl -s --max-time 2 -I http://google.com | sed 's/^[^ ]*  *\([0-9]\).*/\1/; 1q')" in
 	  [23]) echo "HTTP connectivity is up" && return 0;;
