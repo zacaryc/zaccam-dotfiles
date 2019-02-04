@@ -79,7 +79,7 @@ function install() {
             ln -sf ~/zaccam-dotfiles/.${dotfile} ~/.${dotfile}
     done
     [ -d ~/zaccam-dotfiles/.config ] && \
-        ln -sf ~/zaccam-dotfiles/.config ~/.config
+        ln -sfh ~/zaccam-dotfiles/.config ~/.config
     _print_header "Dotfiles have been installed!"
 }
 
