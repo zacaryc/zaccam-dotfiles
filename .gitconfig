@@ -5,7 +5,7 @@
     eol = auto
     autocrlf = false
     editor = vim
-    excludesfile = /home/zaccam/.global_gitignore
+    excludesfile = ~/.global_gitignore
 [push]
     default = simple
 [mergetool]
