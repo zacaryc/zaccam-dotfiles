@@ -4,6 +4,10 @@ _print_header() {
   printf "\n\e[0;32m > $1\n\n\e[0m"
 }
 
+_error() {
+  printf "\n\e[1;31m X $1\n\n\e[0m"
+}
+
 declare -a dotfiles=(
     'vimrc'
     'tmux.conf'
@@ -26,9 +30,9 @@ declare -a dotfiles=(
 # this implementation
 function checkConnectivity() {
 	case "$(curl -s --max-time 2 -I http://google.com | sed 's/^[^ ]*  *\([0-9]\).*/\1/; 1q')" in
-	  [23]) echo "HTTP connectivity is up" && return 0;;
-	  5) echo "The web proxy won't let us through" && return 1;;
-	  *) echo "The network is down or very slow" && return 1;;
+	  [23]) return 0;; # HTTP Connectivity is up
+	  5) _error "The web proxy won't let us through" && return 1;;
+	  *) _error "The network is down or very slow" && return 1;;
 	esac
 }
 
@@ -54,12 +58,13 @@ function brewsetup() {
 
 	brew bundle
 	brew doctor
-	brew cleanup --force
+	brew cleanup
 }
 
 # Install: Quick Bootstrap install of dotfiles
 function install() {
 
+    _print_header "Starting install"
     case $(uname) in
         'Darwin')
             _print_header "This is a mac - Installing with brewfiles"
@@ -76,7 +81,7 @@ function install() {
 
     for dotfile in "${dotfiles[@]}"; do
         [ -f ~/zaccam-dotfiles/.${dotfile} ] && \
-            ln -sf ~/zaccam-dotfiles/.${dotfile} ~/.${dotfile}
+            ln -sfh ~/zaccam-dotfiles/.${dotfile} ~/.${dotfile}
     done
     [ -d ~/zaccam-dotfiles/.config ] && \
         ln -sfh ~/zaccam-dotfiles/.config ~/.config
@@ -86,12 +91,14 @@ function install() {
 
 ## UPDATE- Update the existing dotfiles via git pull
 function update() {
+    _print_header "Updating dotfiles"
     cd ~/zaccam-dotfiles/ && git pull origin master
     _print_header "Dotfiles have been updated!"
 }
 
 # BACKUP - All specified dotfiles to be backed up
 function backup() {
+    _print_header "Backing up current dotfiles"
     mkdir -p ~/dotfiles.backup/
 
     for dotfile in "${dotfiles[@]}"; do
@@ -104,6 +111,7 @@ function backup() {
 # Setup of folder structures etc
 function setup() {
 
+    _print_header "Initial Setup"
     [ -d ~/git/ ] && mkdir -p ~/git/
     [ -d ~/Projects/ ] && mkdir -p ~/Projects/
 
@@ -113,6 +121,7 @@ function setup() {
 # Install Python with pyenv
 function install_python() {
 
+    _print_header "Installing Python"
     if which pyenv > /dev/null; then
         CFLAGS="-I$(brew --prefix openssl)/include" && export CFLAGS
         LDFLAGS="-L$(brew --prefix openssl)/lib" && export LDFLAGS
@@ -143,6 +152,7 @@ function install_python() {
 
     fi
 
+    _print_header "Finished installing python"
 
 }
 
