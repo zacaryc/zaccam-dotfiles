@@ -5,6 +5,12 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
+if [ -f /home/${USER}/.bashrc_local ]; then
+    . /home/${USER}/.bashrc_local
+fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 # Source git prompt niceties
 if [ -f /home/zaccam/.git-prompt.sh ]; then
     source /home/zaccam/.git-prompt.sh
@@ -167,6 +173,11 @@ function mydf()         # Pretty-print of 'df' output.
         out=${info[2]}" "$out"] ("$free" free on "$fs")"
         echo -e $out
     done
+}
+
+function vf()
+{
+    vim $(fzf)
 }
 
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
