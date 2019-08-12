@@ -296,6 +296,8 @@ nnoremap <silent> <Leader>l :call ToggleNetrw()<CR>
 nnoremap <Leader>g :Goyo<CR>
 " Open Tagbar
 nnoremap <Leader>t :TagbarToggle<CR>
+" Open To Do List
+nnoremap <localleader>t :Todo<CR>
 
 " }}}2
 " > Command Mode {{{2
