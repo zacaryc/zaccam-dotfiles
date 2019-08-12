@@ -56,6 +56,8 @@ alias zdiff="sdiff -s -W -w250"
 alias duh='du -sch * 2>/dev/null | sort -h'
 alias du="du -mch"
 alias cdb="cd ~/.bin/"
+alias cdg="cd ~/git/"
+alias cds="cd ~/svn/"
 
 
 git_purge()
