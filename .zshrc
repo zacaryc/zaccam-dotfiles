@@ -40,7 +40,9 @@ if [ -d $HOME/.cabal/bin ]; then export PATH="$PATH:$HOME/.cabal/bin"; fi
 if which go > /dev/null; then export PATH="$PATH:$(go env GOPATH)/bin"; fi
 if [ -d /Users/Zac/anaconda3/bin ]; then export PATH="/Users/Zac/anaconda3/bin:$PATH"; fi
 
-source $ZSH/oh-my-zsh.sh
+if [ -f $ZSH/oh-my-zsh.sh ]; then
+    source $ZSH/oh-my-zsh.sh
+fi
 
 # Auto Update the vim packages
 # source $HOME/zaccam-dotfiles/updates.sh
@@ -61,7 +63,7 @@ alias cdp="cd ~/Projects"
 alias cdv="cd ~/.vim"
 
 DIR_BROWSER=ranger
-command -v ${DIR_BROWSER} >/dev/null 2>&1 || { echo >&2 "${DIR_BROWSER} not found - will use native vim netrw for directory browsing in v()"; DIR_BROWSER=vim }
+command -v ${DIR_BROWSER} >/dev/null 2>&1 || { echo >&2 "MY ZSHRC: ${DIR_BROWSER} not found - will use native vim netrw for directory browsing in v()"; DIR_BROWSER=vim }
 function v()
 {
     if [ $# -eq 0 ]; then
