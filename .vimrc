@@ -298,6 +298,8 @@ nnoremap <Leader>g :Goyo<CR>
 nnoremap <Leader>t :TagbarToggle<CR>
 " Open To Do List
 nnoremap <localleader>t :Todo<CR>
+" Git Blame
+nnoremap <Leader>b :Gblame<CR>
 
 " }}}2
 " > Command Mode {{{2
@@ -429,7 +431,7 @@ set foldtext=MyFoldText()
 
 command! -bar -nargs=1 -complete=file E :exe "edit ".substitute(<q-args>,'\(.*\):\(\d\+\):\=$','+\2 \1','')
 command! -bar -nargs=? -bang Scratch :silent enew<bang>|set buftype=nofile bufhidden=hide noswapfile buflisted filetype=<args> modifiable
-command! -bar -count=0 RFC     :e http://www.ietf.org/rfc/rfc<count>.txt|setl ro noma
+command! -bar -count=0 RFC     :e https://www.ietf.org/rfc/rfc<count>.txt|setl ro noma
 function! s:scratch_maps() abort
     nnoremap <silent> <buffer> == :Scratch<CR>
     nnoremap <silent> <buffer> =" :Scratch<Bar>put<Bar>1delete _<Bar>filetype detect<CR>
