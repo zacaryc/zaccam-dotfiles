@@ -36,12 +36,14 @@ function! ale#lsp#tsserver_message#Geterr(buffer) abort
     return [1, 'ts@geterr', {'files': [expand('#' . a:buffer . ':p')]}]
 endfunction
 
-function! ale#lsp#tsserver_message#Completions(buffer, line, column, prefix) abort
+function! ale#lsp#tsserver_message#Completions(
+\ buffer, line, column, prefix, include_external) abort
     return [0, 'ts@completions', {
     \   'line': a:line,
     \   'offset': a:column,
     \   'file': expand('#' . a:buffer . ':p'),
     \   'prefix': a:prefix,
+    \   'includeExternalModuleExports': a:include_external,
     \}]
 endfunction
 
@@ -59,5 +61,45 @@ function! ale#lsp#tsserver_message#Definition(buffer, line, column) abort
     \   'line': a:line,
     \   'offset': a:column,
     \   'file': expand('#' . a:buffer . ':p'),
+    \}]
+endfunction
+
+function! ale#lsp#tsserver_message#References(buffer, line, column) abort
+    return [0, 'ts@references', {
+    \   'line': a:line,
+    \   'offset': a:column,
+    \   'file': expand('#' . a:buffer . ':p'),
+    \}]
+endfunction
+
+function! ale#lsp#tsserver_message#Quickinfo(buffer, line, column) abort
+    return [0, 'ts@quickinfo', {
+    \   'line': a:line,
+    \   'offset': a:column,
+    \   'file': expand('#' . a:buffer . ':p'),
+    \}]
+endfunction
+
+function! ale#lsp#tsserver_message#Rename(
+\ buffer, line, column, find_in_comments, find_in_strings) abort
+    return [0, 'ts@rename', {
+    \   'line': a:line,
+    \   'offset': a:column,
+    \   'file': expand('#' . a:buffer . ':p'),
+    \   'arguments': {
+    \       'findInComments': a:find_in_comments,
+    \       'findInStrings': a:find_in_strings,
+    \   }
+    \}]
+endfunction
+
+function! ale#lsp#tsserver_message#OrganizeImports(buffer) abort
+    return [0, 'ts@organizeImports', {
+    \   'scope': {
+    \       'type': 'file',
+    \       'args': {
+    \           'file': expand('#' . a:buffer . ':p'),
+    \       },
+    \   },
     \}]
 endfunction

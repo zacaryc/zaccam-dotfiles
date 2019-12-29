@@ -1,41 +1,47 @@
 Before:
-  Save b:ale_go_staticcheck_options
-  Save b:ale_go_staticcheck_lint_package
+  Save g:ale_go_go111module
 
-  let b:ale_go_staticcheck_options = ''
-  let b:ale_go_staticcheck_lint_package = 0
-
-  runtime ale_linters/go/staticcheck.vim
-
-  call ale#test#SetDirectory('/testplugin/test/command_callback')
+  call ale#assert#SetUpLinterTest('go', 'staticcheck')
   call ale#test#SetFilename('test.go')
 
 After:
-  Restore
+  unlet! b:ale_go_go111module
 
-  call ale#test#RestoreDirectory()
-  call ale#linter#Reset()
+  call ale#assert#TearDownLinterTest()
 
 Execute(The staticcheck callback should return the right defaults):
-  AssertEqual
-  \ 'cd ' . ale#Escape(expand('%:p:h')) . ' && '
+  AssertLinter 'staticcheck',
+  \ ale#path#CdString(expand('%:p:h'))
   \   . 'staticcheck '
-  \   . ale#Escape(expand('%' . ':t')),
-  \ ale_linters#go#staticcheck#GetCommand(bufnr(''))
+  \   . ale#Escape(expand('%' . ':t'))
 
 Execute(The staticcheck callback should use configured options):
   let b:ale_go_staticcheck_options = '-test'
 
-  AssertEqual
-  \ 'cd ' . ale#Escape(expand('%:p:h')) . ' && '
+  AssertLinter 'staticcheck',
+  \ ale#path#CdString(expand('%:p:h'))
   \   . 'staticcheck '
-  \   . '-test ' . ale#Escape(expand('%' . ':t')),
-  \ ale_linters#go#staticcheck#GetCommand(bufnr(''))
+  \   . '-test ' . ale#Escape(expand('%' . ':t'))
 
 Execute(The staticcheck `lint_package` option should use the correct command):
   let b:ale_go_staticcheck_lint_package = 1
 
-  AssertEqual
-  \ 'cd ' . ale#Escape(expand('%:p:h')) . ' && '
-  \   . 'staticcheck .',
-  \ ale_linters#go#staticcheck#GetCommand(bufnr(''))
+  AssertLinter 'staticcheck',
+  \ ale#path#CdString(expand('%:p:h')) . 'staticcheck .',
+
+Execute(The staticcheck callback should use the `GO111MODULE` option if set):
+  let b:ale_go_go111module = 'off'
+
+  AssertLinter 'staticcheck',
+  \ ale#path#CdString(expand('%:p:h'))
+  \   . ale#Env('GO111MODULE', 'off')
+  \   . 'staticcheck '
+  \   . ale#Escape(expand('%' . ':t'))
+
+  " Test with lint_package option set
+  let b:ale_go_staticcheck_lint_package = 1
+
+  AssertLinter 'staticcheck',
+  \ ale#path#CdString(expand('%:p:h'))
+  \   . ale#Env('GO111MODULE', 'off')
+  \   . 'staticcheck .'
