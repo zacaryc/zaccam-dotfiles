@@ -1032,3 +1032,8 @@ gradle-app.setting
 **/build/
 
 # End of https://www.gitignore.io/api/vim,c++,java,ruby,perl,tags,perl6,macos,haskell,puppet-librarian,git,python,linux,jetbrains,latex,matlab,maven,osx,svn,scala,sublimetext,tex,vagrant,virtualenv,windows,gradle
+
+###############################
+# Custom Added By Zac
+###############################
+\.vim/spell/.*\.spl
