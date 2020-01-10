@@ -115,6 +115,9 @@ function setup() {
     [ -d ~/git/ ] && mkdir -p ~/git/
     [ -d ~/Projects/ ] && mkdir -p ~/Projects/
 
+	install_python
+	install_tmux
+
 }
 
 
@@ -156,6 +159,14 @@ function install_python() {
 
 }
 
+# Install tmux
+function install_tmux()
+{
+    # Install tmux package manager tpm and plugins
+	[ ! -d ~/.tmux/plugins/tpm ] \
+		&& git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
+		&& ~/.tmux/plugins/tpm/bin/install_plugins
+}
 
 case "$1" in
     "")
