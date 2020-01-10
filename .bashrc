@@ -189,3 +189,5 @@ export EDITOR=vim
 export POWERLINE_FONT=1
 
 
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
