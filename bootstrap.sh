@@ -115,7 +115,7 @@ function setup() {
     [ -d ~/git/ ] && mkdir -p ~/git/
     [ -d ~/Projects/ ] && mkdir -p ~/Projects/
 
-	install_python
+	# install_python
 	install_tmux
 
 }
@@ -124,39 +124,40 @@ function setup() {
 # Install Python with pyenv
 function install_python() {
 
-    _print_header "Installing Python"
-    if which pyenv > /dev/null; then
-        CFLAGS="-I$(brew --prefix openssl)/include" && export CFLAGS
-        LDFLAGS="-L$(brew --prefix openssl)/lib" && export LDFLAGS
-        PYENV_ROOT="/usr/local/python" && export PYENV_ROOT
+    if ! command -v python3; then
+        _print_header "Installing Python"
+        if which pyenv > /dev/null; then
+            CFLAGS="-I$(brew --prefix openssl)/include" && export CFLAGS
+            LDFLAGS="-L$(brew --prefix openssl)/lib" && export LDFLAGS
+            PYENV_ROOT="/usr/local/python" && export PYENV_ROOT
 
-        sudo mkdir -p "$PYENV_ROOT"
-        sudo chown -R "$(whoami):admin" "$PYENV_ROOT"
+            sudo mkdir -p "$PYENV_ROOT"
+            sudo chown -R "$(whoami):admin" "$PYENV_ROOT"
 
-        p "Installing Python 2 with pyenv"
-        pyenv install --skip-existing 2.7.13
-        p "Installing Python 3 with pyenv"
-        pyenv install --skip-existing 3.6.2
-        pyenv global 2.7.13
+            # p "Installing Python 2 with pyenv"
+            # pyenv install --skip-existing 2.7.13
+            printf("Installing Python 3 with pyenv")
+            pyenv install --skip-existing 3.6.2
+            pyenv global 3.6.2
 
-        grep -q "${PYENV_ROOT}" "/etc/paths" || \
-        sudo sed -i "" -e "1i\\
-    ${PYENV_ROOT}/shims
-    " "/etc/paths"
+            grep -q "${PYENV_ROOT}" "/etc/paths" || \
+            sudo sed -i "" -e "1i\\
+        ${PYENV_ROOT}/shims
+        " "/etc/paths"
 
-        init_paths
-        rehash
+            init_paths
+            rehash
 
-        pip install --upgrade "pip" "setuptools"
+            pip install --upgrade "pip" "setuptools"
 
-        # Basic Packages
-        pip install --upgrade "requests"
-        pip install --upgrade "requests-cache" "requests[security]"
+            # Basic Packages
+            pip install --upgrade "requests"
+            pip install --upgrade "requests-cache" "requests[security]"
 
+        fi
+
+        _print_header "Finished installing python"
     fi
-
-    _print_header "Finished installing python"
-
 }
 
 # Install tmux
