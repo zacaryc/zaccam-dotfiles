@@ -20,12 +20,21 @@ else
 fi
 
 printf "${BLUE}%s${NORMAL}\n" "Updating Zac's Dotfiles"
-if git --git-dir=${HOME}/.cfg/ --work-tree=${HOME} status --porcelain >/dev/null; then
-    git --git-dir=${HOME}/.cfg/ --work-tree=${HOME} stash >/dev/null
+
+if [ -d ${HOME}/.cfg ]; then
+    DOTFILES_DIR=${HOME}/.cfg
+    WORK_DIR=${HOME}
+elif [ -d ${HOME}/zaccam-dotfiles ]; then
+    DOTFILES_DIR=${HOME}/zaccam-dotfiles/.git
+    WORK_DIR=${HOME}/zaccam-dotfiles
+fi
+
+if git --git-dir=${DOTFILES_DIR} --work-tree=${WORK_DIR} status --porcelain &>/dev/null; then
+    git --git-dir=${DOTFILES_DIR}/ --work-tree=${WORK_DIR} stash >/dev/null
     STASHED=1
 fi
 pushd ${HOME} >/dev/null
-if git --git-dir=${HOME}/.cfg/ --work-tree=${HOME} pull --rebase --stat origin master
+if git --git-dir=${DOTFILES_DIR}/ --work-tree=${WORK_DIR} pull --rebase --stat origin master >/dev/null
 then
     printf '%s' "$GREEN"
     printf '%s\n'  '  _____            ____        _   '
@@ -39,6 +48,6 @@ else
     printf "${RED}%s${NORMAL}\n" 'There was an error updating. Try again later?'
 fi
 popd >/dev/null
-if [[ $STASHED ]]; then
-     git --git-dir=${HOME}/.cfg/ --work-tree=${HOME} stash pop >/dev/null
- fi
+if [[ ${STASHED} -eq 1 ]]; then
+     git --git-dir=${DOTFILES_DIR}/ --work-tree=${WORK_DIR} stash pop >/dev/null
+fi
