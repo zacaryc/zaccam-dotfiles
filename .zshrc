@@ -8,21 +8,8 @@ export ZSH=/Users/Zac/.oh-my-zsh
 #ZSH_THEME="robbyrussell"
 ZSH_THEME="spaceship"
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
 # Uncomment the following line to change how often to auto-update (in days).
 export UPDATE_ZSH_DAYS=5
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
@@ -47,20 +34,18 @@ fi
 # Auto Update the vim packages
 # source $HOME/zaccam-dotfiles/updates.sh
 
+####################
+# Load Bash Aliases
+####################
+[ -f ${HOME}/.bash_aliases ] && . ${HOME}/.bash_aliases
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
-alias bashrc="vim ~/.zshrc"
-alias zshrc="vim ~/.zshrc"
-alias src="source ~/.zshrc"
-alias vimrc="vim ~/.vimrc"
-alias srcvim="source ~/.vimrc"
-alias gs="ls | grep"
-alias gl="ls -la | grep"
 alias cdp="cd ~/Projects"
-alias cdv="cd ~/.vim"
 
 DIR_BROWSER=ranger
 command -v ${DIR_BROWSER} >/dev/null 2>&1 || { echo >&2 "MY ZSHRC: ${DIR_BROWSER} not found - will use native vim netrw for directory browsing in v()"; DIR_BROWSER=vim }
@@ -77,8 +62,3 @@ function v()
     fi
 }
 
-# vf() { fzf | xargs -r -I % $EDITOR % ;}
-function vf()
-{
-    v $(fzf)
-}

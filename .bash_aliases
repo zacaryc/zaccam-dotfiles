@@ -46,8 +46,9 @@ alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
 ##
 # Misc
 ##
-alias src="source ~/.bashrc"
-alias bashrc="vim ~/.bashrc"
+alias src="source ~/.$(basename ${SHELL})rc"
+alias bashrc="vim ~/.$(basename ${SHELL})rc"
+alias zshrc="vim ~/.$(basename ${SHELL})rc"
 alias srcvim="source ~/.vimrc"
 alias vimrc="vim ~/.vimrc"
 alias tarc="tar -czvf"
@@ -58,6 +59,7 @@ alias du="du -mch"
 alias cdb="cd ~/.bin/"
 alias cdg="cd ~/git/"
 alias cds="cd ~/svn/"
+alias cdv="cd ~/.vim/"
 
 
 git_purge()
@@ -67,3 +69,10 @@ git_purge()
         git branch -D $branch;
     done
 }
+
+# vf() { fzf | xargs -r -I % $EDITOR % ;}
+function vf()
+{
+    vim $(fzf --select-1 --exit-0)
+}
+

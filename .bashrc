@@ -175,13 +175,8 @@ function mydf()         # Pretty-print of 'df' output.
     done
 }
 
-function vf()
-{
-    vim $(fzf)
-}
-
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
-export HISTIGNORE="&:bg:fg:ll:h"
+export HISTIGNORE="&:bg:fg:ll:h:clear:exit:history:[ ]*:ls"
 export HISTTIMEFORMAT="$(echo -e ${BCyan})[%d/%m %H:%M:%S]$(echo -e ${NC}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
