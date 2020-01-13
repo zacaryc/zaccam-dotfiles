@@ -95,7 +95,7 @@ function mycd {
             return 1
         fi
 
-        toDir=`pwd`
+        toDir=$(pwd)
         from=''
 
         for i in $@
@@ -105,12 +105,12 @@ function mycd {
                 from=$i
             else
                 to=$i
-                toDir=`echo $toDir | sed "s/$from/$to/g"`
+                toDir=$(echo "${toDir}" | sed "s/$from/$to/g")
                 from=''
             fi
         done
 
-        builtin cd $toDir
+        builtin cd "${toDir}"
     else
         builtin cd $*
     fi
@@ -126,7 +126,7 @@ git_diff_remote()
     fi
     local branch="$(git branch | grep \* | cut -d ' ' -f2)"
 
-    git diff origin/${branch}
+    git diff "origin/${branch}"
 }
 alias gdr=git_diff_remote
 
@@ -136,10 +136,10 @@ function gcf()
 }
 function gdi() # Get Deployment Items
 {
-    for item in `gcf`; do echo "|${item}|"; done
+    for item in $(gcf); do echo "|${item}|"; done
 }
 
-alias gdif="sh /home/$USER/.bin/get_full_deployment.sh"
+alias gdif="sh /home/${USER}/.bin/get_full_deployment.sh"
 
 
 function deadsyms()
@@ -181,6 +181,7 @@ export HISTTIMEFORMAT="$(echo -e ${BCyan})[%d/%m %H:%M:%S]$(echo -e ${NC}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
 export EDITOR=vim
+export PAGER=most
 export POWERLINE_FONT=1
 
 
