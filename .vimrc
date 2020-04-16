@@ -268,6 +268,11 @@ autocmd BufReadPost *
 " Remember info about open buffers on close
 set viminfo^=%
 
+" If you don't want help windows to be restored:
+set sessionoptions-=help
+" Don't persist options and mappings because it can corrupt sessions.
+set sessionoptions-=options
+
 "}}}
 " Mappings {{{
 
@@ -467,6 +472,21 @@ if has("autocmd")
 
         au FileType java setlocal foldmethod=marker
         au FileType java setlocal foldmarker={,} makeprg=javac\ %
+    augroup END
+    "}}}
+    " Python {{{
+
+    augroup ft_python
+        au!
+
+		au BufNewFile,BufRead python
+			\ setlocal tabstop=4
+			\ setlocal softtabstop=4
+			\ setlocal shiftwidth=4
+			\ setlocal textwidth=79
+			\ setlocal expandtab
+			\ setlocal autoindent
+			\ setlocal fileformat=unix
     augroup END
     "}}}
     " Markdown {{{
