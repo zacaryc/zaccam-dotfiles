@@ -184,6 +184,15 @@ export EDITOR=vim
 export PAGER=most
 export POWERLINE_FONT=1
 
-
-export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="${HOME}/.rbenv/bin:${PATH}"
 eval "$(rbenv init -)"
+export PATH="${HOME}/.local/bin:${PATH}"
+
+# This has to be at the end
+if [ -f "${HOME}/.bash_alias_completion" ]
+then
+	# shellcheck source=${HOME}/.bash_alias_completion
+	source "${HOME}/.bash_alias_completion" 2>/dev/null 1>/dev/null
+	unset -f alias_completion
+fi
+
