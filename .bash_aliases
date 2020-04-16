@@ -76,3 +76,65 @@ function vf()
     vim $(fzf --select-1 --exit-0)
 }
 
+function mynewcd() {
+    if [[ "$#" != 0 ]]; then
+        if [[ $# -ge 2 ]]
+        then
+            if [[ `expr $# % 2` -ne 0 ]]
+            then
+                echo "ERR (mycd): Uneven number of params passed."
+                return 1
+            fi
+
+            toDir=$(pwd)
+            from=''
+
+            for i in "$@"
+            do
+                if [[ $from == '' ]]
+                then
+                    from=$i
+                else
+                    to=$i
+                    toDir="${toDir//${from}/${to}}"
+                    from=''
+                fi
+            done
+
+            builtin cd "${toDir}"
+        else
+            builtin cd "$@";
+        fi
+        return
+    fi
+    while true; do
+        local lsd
+        lsd=$(echo ".." && ls -p | grep '/$' | sed 's;/$;;')
+        local dir
+        dir="$(printf '%s\n' "${lsd[@]}" |
+            fzf-tmux --reverse --preview '
+                __cd_nxt="$(echo {})";
+                __cd_path="$(echo $(pwd)/${__cd_nxt} | sed "s;//;/;")";
+                echo $__cd_path;
+                echo;
+                ls -p --color=always "${__cd_path}";
+        ')"
+        [[ ${#dir} != 0 ]] || return 0
+        builtin cd "$dir" &> /dev/null
+    done
+}
+
+function custom_changedir()
+{
+    local project_root
+    project_root="${1}"
+    local dir
+    dir="$(find "${project_root}" -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*' \
+        -not -empty -not -path '*/\_\_*' \
+        -exec sh -c 'for f do basename -- "$f";done' sh {} + \
+        | fzf-tmux --prompt="Which Project >" --select-1 --exit-0)"
+    builtin cd "${project_root}/${dir}"
+}
+alias cdw='custom_changedir ${HOME}/git/work'
+alias cdp='custom_changedir ${HOME}/git/projects'
+
