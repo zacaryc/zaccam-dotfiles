@@ -73,7 +73,7 @@ git_purge()
 # vf() { fzf | xargs -r -I % $EDITOR % ;}
 function vf()
 {
-    vim $(fzf --select-1 --exit-0)
+    vim "$(fzf --select-1 --exit-0)"
 }
 
 function mynewcd() {

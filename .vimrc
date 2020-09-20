@@ -4,15 +4,6 @@
 
 let s:darwin = has('mac')
 
-" Package Management {{{
-
-" To disable a plugin, add it's bundle name to the following list
-"let g:pathogen_disabled = []
-
-" Pathogen Package Manager
-execute pathogen#infect()
-
-" }}}
 " Vim Base Settings {{{
 
 syntax on
@@ -27,6 +18,15 @@ set laststatus=2
 set nocompatible
 
 "}}}
+" Package Management {{{
+
+" To disable a plugin, add it's bundle name to the following list
+let g:pathogen_disabled = ['ctrlp.vim', 'vim-easytags']
+
+" Pathogen Package Manager
+execute pathogen#infect()
+
+" }}}
 " Vim Settings {{{
 
 set autoindent
@@ -71,6 +71,7 @@ endif
 if exists("+spelllang")
     set spelllang=en_au,en_gb
 endif
+
 
 " Folding {{{
 
@@ -161,7 +162,7 @@ endif
 
 " Plugin: Ctrl-P Properties {{{2
 
-set runtimepath^=~/.vim/bundle/ctrlp.vim
+" set runtimepath^=~/.vim/bundle/ctrlp.vim
 
 " Let Ctrl P search through my dotfiles as well
 let g:ctrlp_show_hidden = 1
@@ -170,14 +171,42 @@ let g:ctrlp_show_hidden = 1
 if has('wildmenu')
     set wildmode=list:longest,full
     set wildoptions=tagfile
-    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*        " Linux/MacOSX
-    set wildignore+=.git,.hg,.svn,.stversions,*.pyc,*.spl,*.o,*.out,*~,%*
-    set wildignore+=*.jpg,*.jpeg,*.png,*.gif,*.zip,**/tmp/**,*.DS_tore
-    set wildignore+=**/node_modules/**,**/bower_modules/**,*/.sass-cache/*
-    set wildignore+=application/vendor/**,**/vendor/ckeditor/**,media/vendor/**
-    set wildignore+=__pycache__,*.egg-info
+    "set wildignore+=*/.git/*,*/.hg/*,*/.svn/*        " Linux/MacOSX
+    "set wildignore+=.git,.hg,.svn,.stversions,*.pyc,*.spl,*.o,*.out,*~,%*
+    "set wildignore+=*.jpg,*.jpeg,*.png,*.gif,*.zip,**/tmp/**,*.DS_store
+    "set wildignore+=**/node_modules/**,**/bower_modules/**,*/.sass-cache/*
+    "set wildignore+=application/vendor/**,**/vendor/ckeditor/**,media/vendor/**
+    " set wildignore+=__pycache__,*.egg-info
 endif
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+
+"}}}2
+"{{{ Plugin: fzf
+
+set runtimepath+=~/.fzf
+
+nnoremap <C-P> :FZF<CR>
+
+" Customize fzf colors to match your color scheme
+" - fzf#wrap translates this to a set of `--color` options
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" let g:fzf_layout = { 'down': '40%' }
+" Empty value to disable preview window altogether
+" let g:fzf_preview_window = ''
 
 "}}}2
 " Plugin: Rainbow Parantheses {{{2
@@ -304,7 +333,7 @@ nnoremap <Leader>t :TagbarToggle<CR>
 " Open To Do List
 nnoremap <localleader>t :Todo<CR>
 " Git Blame
-nnoremap <Leader>b :Gblame<CR>
+nnoremap <Leader>b :Gblame -w<CR>
 
 " }}}2
 " > Command Mode {{{2
@@ -554,12 +583,44 @@ if has("autocmd")
     augroup END
 
     "}}}
+    " JSON {{{
+
+    augroup ft_json
+        au!
+
+        au FileType json setlocal equalprg=jq\ '.'
+    augroup END
+
+    "}}}
     " YAML {{{
 
     augroup ft_yaml
         au!
 
         au FileType yaml set shiftwidth=2
+    augroup END
+
+    "}}}
+    " XSD {{{
+
+    augroup ft_xml
+        au!
+
+        au FileType xsd setlocal noexpandtab shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=manual
+
+        " Indent Tag
+        au FileType xsd nnoremap <buffer> <localleader>= Vat=
+
+        " Tagbar
+        let g:tagbar_type_xsd = {
+            \ 'ctagstype' : 'XSD',
+            \ 'kinds'     : [
+                \ 'e:elements',
+                \ 'c:complexTypes',
+                \ 's:simpleTypes'
+            \ ]
+        \ }
+
     augroup END
 
     "}}}
@@ -572,6 +633,23 @@ if has("autocmd")
 
         " Indent Tag
         au FileType xml nnoremap <buffer> <localleader>= Vat=
+
+    augroup END
+
+    "}}}
+    " SQL {{{
+
+    augroup ft_sql
+        au!
+
+        au FileType sql setlocal
+            \ expandtab
+            \ shiftwidth=4
+            \ tabstop=4
+            \ softtabstop=4
+            \ foldmethod=syntax
+            \ fileformat=unix
+            \ commentstring=--\ %s
 
     augroup END
 
@@ -594,6 +672,7 @@ if has("autocmd")
     augroup ft_gitcommit
         au!
 
+        au FileType gitcommit setlocal comments=:#
         au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0]) | startinsert
     augroup END
     "}}}
@@ -604,6 +683,13 @@ if has("autocmd")
         au FileType tex makeprg=pdflatex\ %
     augroup END
 
+    " }}}
+    " Quickfix {{{
+    augroup autoquickfix
+		autocmd!
+		autocmd QuickFixCmdPost [^l]* cwindow
+		autocmd QuickFixCmdPost    l* lwindow
+	augroup END
     " }}}
     " Misc {{{
     augroup Misc
