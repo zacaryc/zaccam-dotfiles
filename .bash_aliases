@@ -44,6 +44,7 @@ alias gpu='git push -u origin $(git rev-parse --abbrev-ref HEAD)'
 alias grh='git reset --hard'
 alias gg='git grep'
 alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
+alias gfl='git flow'
 ##
 # Misc
 ##
