@@ -5,8 +5,9 @@
 ##
 # System Specific Functions
 ##
-alias l="ls"
-alias ll="ls -lah"
+alias l="ls --color=auto"
+alias ls="ls --color=auto"
+alias ll="ls -lah --color=auto"
 alias la="ll -ah"
 alias lss="svn st"
 alias claer="clear"
