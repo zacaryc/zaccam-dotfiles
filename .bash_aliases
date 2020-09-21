@@ -140,3 +140,4 @@ function custom_changedir()
 alias cdw='custom_changedir ${HOME}/git/work'
 alias cdp='custom_changedir ${HOME}/git/projects'
 
+alias tf='tmuxinator-fzf-start.sh'
