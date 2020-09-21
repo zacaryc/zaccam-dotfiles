@@ -196,3 +196,5 @@ then
 	unset -f alias_completion
 fi
 
+# Dedupe the PATH environment variable
+PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
