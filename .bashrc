@@ -10,6 +10,11 @@ if [ -f /home/${USER}/.bashrc_local ]; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export FZF_DEFAULT_OPTS='
+	 --color=fg:#707880,bg:#1d1f21,hl:#5f819d
+	 --color=fg+:#c5c8c6,bg+:#303030,hl+:#0e9ae6
+	 --color=info:#85678f,prompt:#81a2be,pointer:#a54242
+	 --color=marker:#b294bb,spinner:#373b41,header:#8c9440'
 
 # Source git prompt niceties
 if [ -f /home/zaccam/.git-prompt.sh ]; then
