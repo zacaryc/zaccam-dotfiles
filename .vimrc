@@ -186,6 +186,8 @@ let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 set runtimepath+=~/.fzf
 
 nnoremap <C-P> :FZF<CR>
+" Open up exec mode with Rg ready
+nnoremap <C-G> :Rg 
 
 " Customize fzf colors to match your color scheme
 " - fzf#wrap translates this to a set of `--color` options
