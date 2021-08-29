@@ -5,11 +5,11 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-if [ -f /home/${USER}/.bashrc_local ]; then
-    . /home/${USER}/.bashrc_local
+if [ -f "${HOME}/.bashrc_local" ]; then
+    . "${HOME}/.bashrc_local"
 fi
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
 export FZF_DEFAULT_OPTS='
 	 --color=fg:#707880,bg:#1d1f21,hl:#5f819d
 	 --color=fg+:#c5c8c6,bg+:#303030,hl+:#0e9ae6
@@ -59,14 +59,14 @@ ALERT=${BWhite}${On_Red} # Bold White on red background
 
 #------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
-Y=`date "+%Y"`
-M=`date "+%m"`
-NOW=`date "+%Y%m%d"`
+Y=$(date "+%Y")
+M=$(date "+%m")
+NOW=$(date "+%Y%m%d")
 
 ####################
 # Load Bash Aliases
 ####################
-[ -f ${HOME}/.bash_aliases ] && . ${HOME}/.bash_aliases
+[ -f "${HOME}/.bash_aliases" ] && . "${HOME}/.bash_aliases"
 
 
 ####################
@@ -94,7 +94,7 @@ alias vim="v"
 function mycd {
     if [[ $# -ge 2 ]]
     then
-        if [[ `expr $# % 2` -ne 0 ]]
+        if [[ $(( $# % 2 )) -ne 0 ]]
         then
             echo "ERR (mycd): Uneven number of params passed."
             return 1
@@ -103,14 +103,14 @@ function mycd {
         toDir=$(pwd)
         from=''
 
-        for i in $@
+        for i in "$@"
         do
             if [[ $from == '' ]]
             then
                 from=$i
             else
                 to=$i
-                toDir=$(echo "${toDir}" | sed "s/$from/$to/g")
+                toDir=$(echo "${toDir}" | sed "s/${from}/${to}/g")
                 from=''
             fi
         done
@@ -159,9 +159,9 @@ function mydf()         # Pretty-print of 'df' output.
 {                       # Inspired by 'dfc' utility.
     for fs ; do
 
-        if [ ! -d $fs ]
+        if [ ! -d "${fs}" ]
         then
-          echo -e $fs" :No such file or directory" ; continue
+          echo -e "${fs}\" :No such file or directory\"" ; continue
         fi
 
         local info=( $(command df -P $fs | awk 'END{ print $2,$3,$5 }') )
@@ -175,8 +175,8 @@ function mydf()         # Pretty-print of 'df' output.
                out=$out"-"
             fi
         done
-        out=${info[2]}" "$out"] ("$free" free on "$fs")"
-        echo -e $out
+        out=${info[2]}" "${out}"] ("${free}" free on "${fs}")"
+        echo -e "${out}"
     done
 }
 
@@ -197,9 +197,8 @@ export PATH="${HOME}/.local/bin:${PATH}"
 # This has to be at the end
 if [ -f "${HOME}/.bash_alias_completion" ]
 then
-	# shellcheck source=${HOME}/.bash_alias_completion
-	source "${HOME}/.bash_alias_completion" 2>/dev/null 1>/dev/null
-	unset -f alias_completion
+	# shellcheck source=/home/zaccam/.bash_alias_completion
+	source "${HOME}/.bash_alias_completion" 2>/dev/null 1>/dev/null &
 fi
 
 # Dedupe the PATH environment variable
