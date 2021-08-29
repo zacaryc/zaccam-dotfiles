@@ -329,11 +329,12 @@ map <tab> %
 nnoremap Y y$
 " Open Netrw Draw
 nnoremap <silent> <Leader>l :call ToggleNetrw()<CR>
-nnoremap <Leader>g :Goyo<CR>
 " Open Tagbar
 nnoremap <Leader>t :TagbarToggle<CR>
 " Open To Do List
 nnoremap <localleader>t :Todo<CR>
+" Git Status
+nnoremap <leader>gs :G<CR>
 " Git Blame
 nnoremap <Leader>b :Gblame -w<CR>
 
