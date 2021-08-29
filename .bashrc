@@ -190,7 +190,8 @@ export PAGER=most
 export POWERLINE_FONT=1
 
 export PATH="${HOME}/.rbenv/bin:${PATH}"
-eval "$(rbenv init -)"
+eval "$(rbenv init --no-rehash -)"
+(rbenv rehash &) 2> /dev/null
 export PATH="${HOME}/.local/bin:${PATH}"
 
 # This has to be at the end
