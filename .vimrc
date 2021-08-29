@@ -322,6 +322,10 @@ map q <Nop>
 " Move to matching tags i.e. <...> via tab
 map <tab> %
 
+" Delete without affecting registers
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+
 "}}}2
 " > Normal Mode Map {{{2
 
@@ -338,6 +342,13 @@ nnoremap <leader>gs :G<CR>
 " Git Blame
 nnoremap <Leader>b :Gblame -w<CR>
 
+" Keep searches centred
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+"Yank entire document to clipboard
+nnoremap <leader>y mzgg"+yG`z
+
 " }}}2
 " > Command Mode {{{2
 
@@ -350,9 +361,20 @@ cmap w!! w !sudo tee > /dev/null %
 " Instead of reaching for the escape key
 inoremap kj <Esc>
 
+" Add break points for undo
+inoremap , ,<C-g>u
+inoremap . .<C-g>u
+inoremap ! !<C-g>u
+inoremap ? ?<C-g>u
+
 " }}}2
 " > Visual Mode {{{2
 vnoremap <Space> I<Space><Esc>gv
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '>-2<CR>gv=gv
+
+xnoremap <leader>p "_dP
+
 " }}}2
 
 if has('digraphs')
