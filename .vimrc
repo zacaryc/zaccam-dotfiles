@@ -3,6 +3,11 @@
 "
 
 let s:darwin = has('mac')
+let s:windows = has('win32') || has('win64')
+
+" Set leader and local leader
+let mapleader=";"
+let maplocalleader = "\\"
 
 " Vim Base Settings {{{
 
@@ -20,11 +25,65 @@ set nocompatible
 "}}}
 " Package Management {{{
 
+" > Pathogen {{{2
 " To disable a plugin, add it's bundle name to the following list
-let g:pathogen_disabled = ['ctrlp.vim', 'vim-easytags']
+"let g:pathogen_disabled = ['ctrlp.vim', 'vim-easytags']
 
 " Pathogen Package Manager
-execute pathogen#infect()
+"execute pathogen#infect()
+
+"}}}2
+" > Plug {{{2
+
+silent! if plug#begin('~/.vim/plugged')
+
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'junegunn/fzf', { 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'kien/rainbow_parentheses.vim'
+
+" UI
+Plug 'w0ng/vim-hybrid'
+Plug 'altercation/vim-colors-solarized'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-vinegar'
+Plug 'ryanoasis/vim-devicons'
+
+" Edit
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+  let g:tagbar_sort = 0
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'Raimondi/delimitMate'
+
+" Git
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-markdown'
+Plug 'airblade/vim-gitgutter'
+"Plug 'mhinz/vim-signify' " Possible alternative - supposedly be faster, needs trial
+
+" Languages
+if v:version >= 800
+  Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+endif
+Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+Plug 'elzr/vim-json'
+Plug 'pangloss/vim-javascript'
+Plug 'rodjek/vim-puppet'
+
+" Misc
+Plug 'Konfekt/FastFold'
+
+" Lint
+Plug 'w0rp/ale'
+
+call plug#end()
+endif
+
+"}}}2
 
 " }}}
 " Vim Settings {{{
@@ -306,10 +365,6 @@ set sessionoptions-=options
 
 "}}}
 " Mappings {{{
-
-" Set leader and local leader
-let mapleader=";"
-let maplocalleader = "\\"
 
 " > General Map {{{2
 
