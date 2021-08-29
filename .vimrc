@@ -410,17 +410,34 @@ command! Todo call s:todo()
 "}}}
 " Number Toggle {{{
 
-" toggle between number and relativenumber
+" toggle between number and relativenumber and none
 function! ToggleNumber()
-    if(&relativenumber == 1)
+    if(&relativenumber == 0 && &number == 0)
+        set relativenumber
+    elseif(&relativenumber == 1 && &number == 0)
         set norelativenumber
         set number
     else
-        set relativenumber
+        set norelativenumber
+        set nonumber
     endif
 endfunction
 
 nnoremap <leader>n :call ToggleNumber()<CR>
+
+" }}}
+" Copy Mode {{(
+" This is to remove all screen additions to copy code to clipboard
+function! CleanScreenCopy()
+    set norelativenumber
+    set nonumber
+    GitGutterDisable
+    IndentGuidesDisable
+    nohl
+    redraw!
+endfunction
+
+nnoremap <leader>c :call CleanScreenCopy()<CR>
 
 " }}}
 " Fold Text {{{2
