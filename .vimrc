@@ -57,19 +57,22 @@ Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'Raimondi/delimitMate'
 
-" Git
+"Git
+Plug 'airblade/vim-gitgutter'
+"Plug 'mhinz/vim-signify' " Possible alternative - supposedly be faster, needs trial
+
+" Tpope godliness
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-markdown'
-Plug 'airblade/vim-gitgutter'
-"Plug 'mhinz/vim-signify' " Possible alternative - supposedly be faster, needs trial
+Plug 'tpope/vim-commentary'
 
 " Languages
 if v:version >= 800
   Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 endif
-Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+" Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 Plug 'elzr/vim-json'
 Plug 'pangloss/vim-javascript'
 Plug 'rodjek/vim-puppet'
