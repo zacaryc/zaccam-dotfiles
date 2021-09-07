@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-[ -f ${HOME}/.dotfiles/prompt-utils.sh ] || return
+[ -f ${HOME}/zaccam-dotfiles/.dotfiles/prompt-utils.sh ] || return
 
-. ${HOME}/.dotfiles/prompt-utils.sh
+. ${HOME}/zaccam-dotfiles/.dotfiles/prompt-utils.sh
 
 __powerline() {
 
