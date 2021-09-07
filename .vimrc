@@ -134,6 +134,11 @@ if exists("+spelllang")
     set spelllang=en_au,en_gb
 endif
 
+" If RG installed, use it as the vimgrep default
+if executable('rg')
+    set grepprg=rg\ --vimgrep
+    set grepformat=%f:%l:%c:%m
+endif
 
 " Folding {{{
 
