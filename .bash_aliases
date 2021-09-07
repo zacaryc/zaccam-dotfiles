@@ -70,10 +70,121 @@ alias cds="cd ~/svn/"
 alias cdv="cd ~/.vim/"
 
 
+####################
+# FUNCTIONS
+####################
+
+# `v` with no arguments opens the current directory in Vim, otherwise opens the
+# given location
+function v() {
+    if [ -f /usr/local/bin/vim ]; then
+        VIMPATH=/usr/local/bin/vim
+    else
+        VIMPATH=/usr/bin/vim
+    fi
+
+    if [ $# -eq 0 ]; then
+        ${VIMPATH} .
+    else
+        ${VIMPATH} "$@"
+    fi
+}
+alias vim="v"
+
+# cd
+function mycd {
+    if [[ $# -ge 2 ]]
+    then
+        if [[ $(( $# % 2 )) -ne 0 ]]
+        then
+            echo "ERR (mycd): Uneven number of params passed."
+            return 1
+        fi
+
+        toDir=$(pwd)
+        from=''
+
+        for i in "$@"
+        do
+            if [[ $from == '' ]]
+            then
+                from=$i
+            else
+                to=$i
+                toDir=$(echo "${toDir}" | sed "s/${from}/${to}/g")
+                from=''
+            fi
+        done
+
+        builtin cd "${toDir}"
+    else
+        builtin cd $*
+    fi
+}
+alias cd='mycd'
+
+alias gdp="git diff origin...HEAD"
+git_diff_remote()
+{
+    if ! git rev-parse --is-inside-git-dir >/dev/null 2>/dev/null; then
+        echo "Not inside git directory"
+        return
+    fi
+    local branch="$(git branch | grep \* | cut -d ' ' -f2)"
+
+    git diff "origin/${branch}"
+}
+alias gdr=git_diff_remote
+
+function gcf()
+{
+    git diff --name-only origin...HEAD
+}
+function gdi() # Get Deployment Items
+{
+    for item in $(gcf); do echo "|${item}|"; done
+}
+
+alias gdif="sh /home/${USER}/.bin/get_full_deployment.sh"
+
+
+function deadsyms()
+{
+    for f in $(find . -type l -exec sh -c "file -b {} | grep -q ^broken" \; -print 2>/dev/null); do
+        echo Unlinking ${f};
+        unlink ${f};
+    done
+}
+
+function mydf()         # Pretty-print of 'df' output.
+{                       # Inspired by 'dfc' utility.
+    for fs ; do
+
+        if [ ! -d "${fs}" ]
+        then
+          echo -e "${fs}\" :No such file or directory\"" ; continue
+        fi
+
+        local info=( $(command df -P $fs | awk 'END{ print $2,$3,$5 }') )
+        local free=( $(command df -Pkh $fs | awk 'END{ print $4 }') )
+        local nbstars=$(( 20 * ${info[1]} / ${info[0]} ))
+        local out="["
+        for ((j=0;j<20;j++)); do
+            if [ ${j} -lt ${nbstars} ]; then
+               out=$out"*"
+            else
+               out=$out"-"
+            fi
+        done
+        out=${info[2]}" "${out}"] ("${free}" free on "${fs}")"
+        echo -e "${out}"
+    done
+}
+
 git_purge()
 {
     git fetch -p && \
-    for branch in `git branch -vv | awk '{print $1,$4}' | grep 'gone]' | awk '{print $1}'`; do
+    for branch in $(git branch -vv | awk '{print $1,$4}' | grep 'gone]' | awk '{print $1}'); do
         git branch -D $branch;
     done
 }
@@ -88,7 +199,7 @@ function mynewcd() {
     if [[ "$#" != 0 ]]; then
         if [[ $# -ge 2 ]]
         then
-            if [[ `expr $# % 2` -ne 0 ]]
+            if [[ $(expr $# % 2) -ne 0 ]]
             then
                 echo "ERR (mycd): Uneven number of params passed."
                 return 1
@@ -120,7 +231,7 @@ function mynewcd() {
         lsd=$(echo ".." && ls -p | grep '/$' | sed 's;/$;;')
         local dir
         dir="$(printf '%s\n' "${lsd[@]}" |
-            fzf-tmux --reverse --preview '
+            fzf --reverse --preview '
                 __cd_nxt="$(echo {})";
                 __cd_path="$(echo $(pwd)/${__cd_nxt} | sed "s;//;/;")";
                 echo $__cd_path;
@@ -134,8 +245,12 @@ function mynewcd() {
 
 function custom_changedir()
 {
+    # If there is a custom check tag, check the project type
     local project_root
+    # local custom_checks
     project_root="${1}"
+    # custom_checks="${2}"
+    # [ -n "${custom_checks}" ] && return
     local dir
     if [ ${FD_EXISTS} -eq 0 ]; then
         dir="$(find "${project_root}" -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*' \
@@ -152,3 +267,5 @@ alias cdw='custom_changedir ${HOME}/git/work'
 alias cdp='custom_changedir ${HOME}/git/projects'
 
 alias tf='tmuxinator-fzf-start.sh'
+
+
