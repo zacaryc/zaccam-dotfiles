@@ -2,12 +2,6 @@
 # User specific aliases and functions
 #------------------------------------
 
-if ! command -V fd > /dev/null; then
-    export FD_EXISTS=0
-else
-    export FD_EXISTS=1
-fi
-
 ##
 # System Specific Functions
 ##

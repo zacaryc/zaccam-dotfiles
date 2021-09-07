@@ -18,6 +18,15 @@ if [ -f "${HOME}/.bashrc_local" ]; then
 fi
 
 [ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
+
+if ! command -V fd > /dev/null; then
+    export FD_EXISTS=0
+else
+    export FD_EXISTS=1
+    export FZF_DEFAULT_COMMAND="fd --type file --follow"
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
+
 export FZF_DEFAULT_OPTS='
 	 --color=fg:#707880,bg:#1d1f21,hl:#5f819d
 	 --color=fg+:#c5c8c6,bg+:#303030,hl+:#0e9ae6
@@ -27,8 +36,12 @@ export FZF_DEFAULT_OPTS='
 # Source git prompt niceties
 if [ -f ${HOME}/.git-prompt.sh ]; then
     source ${HOME}/.git-prompt.sh
-elif [ -f /usr/share/doc/git-1.9.3/contrib/completion/git-prompt.sh ]; then
-    source /usr/share/doc/git-1.9.3/contrib/completion/git-prompt.sh
+fi
+
+if [ -d "${DOTFILES}" ]; then
+    if [ -d ${DOTFILES}/.dotfiles ]; then
+        source ${DOTFILES}/.dotfiles/prompt.bash
+    fi
 fi
 
 ####################
@@ -74,7 +87,6 @@ Y=$(date "+%Y")
 M=$(date "+%m")
 NOW=$(date "+%Y%m%d")
 
-
 ####################
 # Environment Variables
 ####################
@@ -91,10 +103,20 @@ export POWERLINE_FONT=1
 # Load Bash Aliases
 ####################
 [ -f "${HOME}/.bash_aliases" ] && . "${HOME}/.bash_aliases"
+
+
+####################
+# Ruby setup
+####################
+# Unsure as to what originally required me to add this
+# Commenting out for now as it drains time on login
 # export PATH="${HOME}/.rbenv/bin:${PATH}"
 # eval $(rbenv init --no-rehash -)
 # (rbenv rehash &) 2> /dev/null
-export PATH="${HOME}/.local/bin:${PATH}"
+
+####################
+# Completions
+####################
 
 # if [ -f "${HOME}/.bash_completion_tmux" ]
 # then
@@ -108,5 +130,22 @@ then
 	source "${HOME}/.bash_alias_completion" 2>/dev/null 1>/dev/null &
 fi
 
+####################
+# Set PATH values
+####################
+
+# Set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# Set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
 # Dedupe the PATH environment variable
 PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
+
+# Export PATH back out
+export $PATH
