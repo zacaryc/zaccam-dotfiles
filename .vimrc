@@ -429,7 +429,7 @@ inoremap ? ?<C-g>u
 " > Visual Mode {{{2
 vnoremap <Space> I<Space><Esc>gv
 vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '>-2<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 xnoremap <leader>p "_dP
 
