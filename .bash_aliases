@@ -2,6 +2,12 @@
 # User specific aliases and functions
 #------------------------------------
 
+if ! command -V fd > /dev/null; then
+    export FD_EXISTS=0
+else
+    export FD_EXISTS=1
+fi
+
 ##
 # System Specific Functions
 ##
@@ -131,10 +137,15 @@ function custom_changedir()
     local project_root
     project_root="${1}"
     local dir
-    dir="$(find "${project_root}" -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*' \
-        -not -empty -not -path '*/\_\_*' \
-        -exec sh -c 'for f do basename -- "$f";done' sh {} + \
-        | fzf-tmux --prompt="Which Project >" --select-1 --exit-0)"
+    if [ ${FD_EXISTS} -eq 0 ]; then
+        dir="$(find "${project_root}" -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*' \
+            -not -empty -not -path '*/\_\_*' \
+            -exec sh -c 'for f do basename -- "$f";done' sh {} + \
+            | fzf-tmux --prompt="Which Project >" --select-1 --exit-0)"
+    else
+        dir="$(fd . --base-directory="${project_root}" --max-depth 1 --type d \
+                | fzf --prompt="Which Project >" --select-1 --exit-0)"
+    fi
     builtin cd "${project_root}/${dir}"
 }
 alias cdw='custom_changedir ${HOME}/git/work'
