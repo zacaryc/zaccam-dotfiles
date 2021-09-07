@@ -136,7 +136,7 @@ function install_python() {
 
             # p "Installing Python 2 with pyenv"
             # pyenv install --skip-existing 2.7.13
-            printf("Installing Python 3 with pyenv")
+            printf "Installing Python 3 with pyenv"
             pyenv install --skip-existing 3.6.2
             pyenv global 3.6.2
 
