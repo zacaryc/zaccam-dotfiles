@@ -3,6 +3,11 @@
 "
 
 let s:darwin = has('mac')
+let s:windows = has('win32') || has('win64')
+
+" Set leader and local leader
+let mapleader=";"
+let maplocalleader = "\\"
 
 " Vim Base Settings {{{
 
@@ -20,11 +25,68 @@ set nocompatible
 "}}}
 " Package Management {{{
 
+" > Pathogen {{{2
 " To disable a plugin, add it's bundle name to the following list
-let g:pathogen_disabled = ['ctrlp.vim', 'vim-easytags']
+"let g:pathogen_disabled = ['ctrlp.vim', 'vim-easytags']
 
 " Pathogen Package Manager
-execute pathogen#infect()
+"execute pathogen#infect()
+
+"}}}2
+" > Plug {{{2
+
+silent! if plug#begin('~/.vim/plugged')
+
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'junegunn/fzf', { 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'kien/rainbow_parentheses.vim'
+
+" UI
+Plug 'w0ng/vim-hybrid'
+Plug 'altercation/vim-colors-solarized'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-vinegar'
+Plug 'ryanoasis/vim-devicons'
+
+" Edit
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+  let g:tagbar_sort = 0
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'Raimondi/delimitMate'
+
+"Git
+Plug 'airblade/vim-gitgutter'
+"Plug 'mhinz/vim-signify' " Possible alternative - supposedly be faster, needs trial
+
+" Tpope godliness
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-commentary'
+
+" Languages
+if v:version >= 800
+  Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+endif
+" Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+Plug 'elzr/vim-json'
+Plug 'pangloss/vim-javascript'
+Plug 'rodjek/vim-puppet'
+
+" Misc
+Plug 'Konfekt/FastFold'
+
+" Lint
+Plug 'w0rp/ale'
+
+call plug#end()
+endif
+
+"}}}2
 
 " }}}
 " Vim Settings {{{
@@ -72,6 +134,11 @@ if exists("+spelllang")
     set spelllang=en_au,en_gb
 endif
 
+" If RG installed, use it as the vimgrep default
+if executable('rg')
+    set grepprg=rg\ --vimgrep
+    set grepformat=%f:%l:%c:%m
+endif
 
 " Folding {{{
 
@@ -307,10 +374,6 @@ set sessionoptions-=options
 "}}}
 " Mappings {{{
 
-" Set leader and local leader
-let mapleader=";"
-let maplocalleader = "\\"
-
 " > General Map {{{2
 
 "remap VIM 0 to first non-blank character
@@ -340,7 +403,7 @@ nnoremap <localleader>t :Todo<CR>
 " Git Status
 nnoremap <leader>gs :G<CR>
 " Git Blame
-nnoremap <Leader>b :Gblame -w<CR>
+nnoremap <Leader>b :Git blame -w<CR>
 
 " Keep searches centred
 nnoremap n nzzzv
@@ -371,7 +434,7 @@ inoremap ? ?<C-g>u
 " > Visual Mode {{{2
 vnoremap <Space> I<Space><Esc>gv
 vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '>-2<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 xnoremap <leader>p "_dP
 
