@@ -1,9 +1,9 @@
 # .bashrc
 
 # Source global definitions
-if [ -f /etc/bashrc ]; then
-    . /etc/bashrc
-fi
+# if [ -f /etc/bashrc ]; then
+#     . /etc/bashrc
+# fi
 
 if [ -f "${HOME}/.bashrc_local" ]; then
     . "${HOME}/.bashrc_local"
@@ -79,10 +79,19 @@ export EDITOR=vim
 export PAGER=most
 export POWERLINE_FONT=1
 
-export PATH="${HOME}/.rbenv/bin:${PATH}"
-eval "$(rbenv init --no-rehash -)"
-(rbenv rehash &) 2> /dev/null
+####################
+# Load Bash Aliases
+####################
+[ -f "${HOME}/.bash_aliases" ] && . "${HOME}/.bash_aliases"
+# export PATH="${HOME}/.rbenv/bin:${PATH}"
+# eval $(rbenv init --no-rehash -)
+# (rbenv rehash &) 2> /dev/null
 export PATH="${HOME}/.local/bin:${PATH}"
+
+# if [ -f "${HOME}/.bash_completion_tmux" ]
+# then
+# 	source "${HOME}/.bash_completion_tmux" 2>/dev/null 1>/dev/null
+# fi
 
 # This has to be at the end
 if [ -f "${HOME}/.bash_alias_completion" ]
