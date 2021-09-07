@@ -398,7 +398,7 @@ nnoremap <localleader>t :Todo<CR>
 " Git Status
 nnoremap <leader>gs :G<CR>
 " Git Blame
-nnoremap <Leader>b :Gblame -w<CR>
+nnoremap <Leader>b :Git blame -w<CR>
 
 " Keep searches centred
 nnoremap n nzzzv
