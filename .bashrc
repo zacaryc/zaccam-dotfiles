@@ -1,5 +1,13 @@
 # .bashrc
 
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+export DOTFILES=${HOME}/zaccam-dotfiles
+
 # Source global definitions
 # if [ -f /etc/bashrc ]; then
 #     . /etc/bashrc
@@ -17,8 +25,8 @@ export FZF_DEFAULT_OPTS='
 	 --color=marker:#b294bb,spinner:#373b41,header:#8c9440'
 
 # Source git prompt niceties
-if [ -f /home/zaccam/.git-prompt.sh ]; then
-    source /home/zaccam/.git-prompt.sh
+if [ -f ${HOME}/.git-prompt.sh ]; then
+    source ${HOME}/.git-prompt.sh
 elif [ -f /usr/share/doc/git-1.9.3/contrib/completion/git-prompt.sh ]; then
     source /usr/share/doc/git-1.9.3/contrib/completion/git-prompt.sh
 fi
