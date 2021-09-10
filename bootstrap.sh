@@ -8,6 +8,10 @@ _error() {
   printf "\n\e[1;31m X $1\n\n\e[0m"
 }
 
+user () {
+  printf "\r  [ \033[0;33m??\033[0m ] $1\n"
+}
+
 declare -a dotfiles=(
     'vimrc'
     'tmux.conf'
@@ -41,7 +45,7 @@ function brewsetup() {
 
 	# Check if connectivity is up
 	if ! checkConnectivity; then
-		echo "Cannot continue brew steps without connectivity. Skipping"
+		_error "Cannot continue brew steps without connectivity. Skipping"
 		return 1
 	fi
 
@@ -61,6 +65,27 @@ function brewsetup() {
 	brew cleanup
 }
 
+# For Debian/Linux setup files
+function debianSetup() {
+
+	# Check if connectivity is up
+	if ! checkConnectivity; then
+		_error "Cannot continue package updates without connectivity. Skipping debian setup"
+		return 1
+	fi
+
+    sudo apt-get update
+    sudo apt-get upgrade
+    sudo apt-get autoremove
+
+    # In mac this can be done in brew
+    if ! [ -f ~/.fzf ]; then
+        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+        ~/.fzf/install
+    fi
+}
+
+
 # Install: Quick Bootstrap install of dotfiles
 function install() {
 
@@ -74,6 +99,7 @@ function install() {
             ;;
         'Linux')
             _print_header "This is a linux machine"
+			debianSetup
             # TODO: Linux Package Support - can also include WSL
             echo "No support for package install yet - TODO"
             ;;
@@ -99,7 +125,7 @@ function update() {
 # BACKUP - All specified dotfiles to be backed up
 function backup() {
     _print_header "Backing up current dotfiles"
-    mkdir -p ~/dotfiles.backup/
+    check_create_dir "${HOME}/dotfiles.backup"
 
     for dotfile in "${dotfiles[@]}"; do
         [ -f ~/.${dotfile} ] && cp -vR ~/.${dotfile} ~/dotfiles.backup/
@@ -108,16 +134,54 @@ function backup() {
     _print_header "Dotfiles have been backed up!"
 }
 
+# Setup a gitconfig local with name and email to remove the hardcoded versions
+# from repo that will always cause issues
+function setup_git_details()
+{
+	if ! [ -f ${HOME}/.gitconfig.local ]
+	then
+		_print_header "Setting up gitconfig"
+
+		git_credential='cache'
+		if [ "$(uname -s)" == "Darwin" ]
+		then
+			git_credential='osxkeychain'
+		fi
+
+		user ' - What is your git author name?'
+		read -e git_authorname
+		user ' - What is your git author email?'
+		read -e git_authoremail
+
+		cat << EOF > ${HOME}/.gitconfig.local
+[user]
+	name = ${git_authorname}
+	email = ${git_authoremail}
+[credential]
+    helper = ${git_credential}
+EOF
+	fi
+}
+
+# Check before create of directories
+function check_create_dir()
+{
+    dir=$1
+    [ ! -d ${dir} ] && mkdir -p ${dir}
+}
+
 # Setup of folder structures etc
 function setup() {
 
     _print_header "Initial Setup"
-    [ -d ~/git/ ] && mkdir -p ~/git/
-    [ -d ~/Projects/ ] && mkdir -p ~/Projects/
+    check_create_dir "${HOME}/git"
+    check_create_dir "${HOME}/git/{work,projects,reference,misc}"
+    check_create_dir "${HOME}/Projects"
+    check_create_dir "${HOME}/.repos.d/"
 
+    setup_git_details
 	# install_python
 	install_tmux
-
 }
 
 
@@ -141,9 +205,7 @@ function install_python() {
             pyenv global 3.6.2
 
             grep -q "${PYENV_ROOT}" "/etc/paths" || \
-            sudo sed -i "" -e "1i\\
-        ${PYENV_ROOT}/shims
-        " "/etc/paths"
+            sudo sed -i "" -e "1i\\ ${PYENV_ROOT}/shims " "/etc/paths"
 
             init_paths
             rehash
@@ -181,6 +243,9 @@ case "$1" in
         ;;
     "--install" | "-i")
         install
+        ;;
+    "--setup" | "-s")
+        setup
         ;;
     "--update" | "-u")
         update

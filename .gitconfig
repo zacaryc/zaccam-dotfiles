@@ -1,17 +1,17 @@
-[user]
-    name = Zac Campbell
-    email = zacaryc24@gmail.com
+[include]
+    path = ~/.gitconfig.local
 [core]
     eol = auto
     autocrlf = false
     editor = vim
     excludesfile = ~/.global_gitignore
-[push]
-    default = simple
+[alias]
+    co = checkout
+    prettylog = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(yellow)%d%C(reset)' --all
 [mergetool]
     keepBackup = false
-[alias]
-    prettylog = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(yellow)%d%C(reset)' --all
 [pager]
 	branch = false
     diff = false
+[push]
+    default = simple
