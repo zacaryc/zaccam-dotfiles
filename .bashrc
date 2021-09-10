@@ -19,7 +19,7 @@ fi
 
 [ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
 
-if ! command -V fd > /dev/null; then
+if ! command -V fd 2> /dev/null; then
     export FD_EXISTS=0
 else
     export FD_EXISTS=1
@@ -137,6 +137,11 @@ fi
 # Set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
+fi
+
+# Set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.bin" ] ; then
+    PATH="$HOME/.bin:$PATH"
 fi
 
 # Set PATH so it includes user's private bin if it exists
