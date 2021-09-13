@@ -74,9 +74,13 @@ function debianSetup() {
 		return 1
 	fi
 
-    sudo apt-get update
-    sudo apt-get upgrade
-    sudo apt-get autoremove
+    read -p "Wish to update/upgrade via apt-get?" -n 1;
+    echo "";
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get autoremove
+    fi
 
     # In mac this can be done in brew
     if ! [ -f ~/.fzf ]; then
@@ -163,6 +167,18 @@ EOF
 	fi
 }
 
+# Sometimes things don't sit in nice packages
+# And I need to clone and build from source
+# Sometimes I just have repos that I consistently return back to that I want up
+# Can add local work/related repos to bootstrap as well
+function sync_repo_list()
+{
+    for f in $(find $DOTFILES/repofiles.d/); do
+        ln -sf ${f} ${HOME}/.repos.d/
+    done
+}
+
+
 # Check before create of directories
 function check_create_dir()
 {
@@ -180,6 +196,7 @@ function setup() {
     check_create_dir "${HOME}/.repos.d/"
 
     setup_git_details
+    sync_repo_list
 	# install_python
 	install_tmux
 }
