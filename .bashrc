@@ -153,4 +153,4 @@ fi
 PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
 
 # Export PATH back out
-export $PATH
+export PATH
