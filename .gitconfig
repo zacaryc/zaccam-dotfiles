@@ -15,3 +15,5 @@
     diff = false
 [push]
     default = simple
+[init]
+	defaultBranch = master
