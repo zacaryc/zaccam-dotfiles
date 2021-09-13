@@ -96,7 +96,9 @@ export HISTTIMEFORMAT="$(echo -e ${BCyan})[%d/%m %H:%M:%S]$(echo -e ${NC}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
 export EDITOR=vim
-export PAGER=most
+if ! command -V most 2> /dev/null; then
+    export PAGER=most
+fi
 export POWERLINE_FONT=1
 
 ####################
