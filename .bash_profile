@@ -4,6 +4,9 @@
 # see /usr/share/doc/bash/examples/startup-files for examples.
 # the files are located in the bash-doc package.
 
+# Set umask
+umask 002
+
 # Set sensible LS COLORS
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
@@ -15,3 +18,6 @@ if [ -n "$BASH_VERSION" ]; then
 	. "${HOME}/.bashrc"
     fi
 fi
+
+# Linux brew activate
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
