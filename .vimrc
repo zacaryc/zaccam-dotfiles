@@ -74,6 +74,7 @@ Plug 'tpope/vim-git'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
 
 " Languages
 if v:version >= 800
