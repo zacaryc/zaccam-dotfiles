@@ -18,51 +18,54 @@ __powerline() {
   # Never show a default user
   # readonly DEFAULT_USER='user'
 
-  # Default background and foreground ANSI colours
-  readonly DEFAULT_BG=0
-  readonly DEFAULT_FG=7
+if [ -z $__PROMPT_COLORS_DEFINED ]; then
+    # Default background and foreground ANSI colours
+    readonly DEFAULT_BG=0
+    readonly DEFAULT_FG=7
 
-  # Max length of full path
-  readonly MAX_PATH_LENGTH=30
+    # Max length of full path
+    readonly MAX_PATH_LENGTH=30
 
-  # Unicode symbols
-#  if [ -z "${POWERLINE_FONT+x}" ]; then
-#    readonly GIT_BRANCH_SYMBOL='⑂'
-#  else
+    # Unicode symbols
+    #  if [ -z "${POWERLINE_FONT+x}" ]; then
+    #    readonly GIT_BRANCH_SYMBOL='⑂'
+    #  else
     readonly GIT_BRANCH_SYMBOL=''
-#  fi
-  readonly GIT_BRANCH_CHANGED_SYMBOL='Δ'
-  readonly GIT_NEED_PUSH_SYMBOL='↑'
-  readonly GIT_NEED_PULL_SYMBOL='↓'
+    #  fi
+    readonly GIT_BRANCH_CHANGED_SYMBOL='Δ'
+    readonly GIT_NEED_PUSH_SYMBOL='↑'
+    readonly GIT_NEED_PULL_SYMBOL='↓'
 
-  # Powerline symbols
-  readonly BLOCK_START=''
-  readonly LOCK_LOGO=''
+    # Powerline symbols
+    readonly BLOCK_START=''
+    readonly LOCK_LOGO=''
 
-  # ANSI Colours
-  readonly BLACK=0
-  readonly RED=1
-  readonly GREEN=40
-  readonly YELLOW=3
-  readonly BLUE=4
-  readonly MAGENTA=133
-  readonly CYAN=6
-  readonly WHITE=7
+    # ANSI Colours
+    readonly BLACK=0
+    readonly RED=1
+    readonly GREEN=40
+    readonly YELLOW=3
+    readonly BLUE=4
+    readonly MAGENTA=133
+    readonly CYAN=6
+    readonly WHITE=7
 
-  readonly BLACK_BRIGHT=8
-  readonly RED_BRIGHT=9
-  readonly GREEN_BRIGHT=10
-  readonly YELLOW_BRIGHT=11
-  readonly BLUE_BRIGHT=12
-  readonly MAGENTA_BRIGHT=13
-  readonly CYAN_BRIGHT=14
-  readonly WHITE_BRIGHT=15
+    readonly BLACK_BRIGHT=8
+    readonly RED_BRIGHT=9
+    readonly GREEN_BRIGHT=10
+    readonly YELLOW_BRIGHT=11
+    readonly BLUE_BRIGHT=12
+    readonly MAGENTA_BRIGHT=13
+    readonly CYAN_BRIGHT=14
+    readonly WHITE_BRIGHT=15
 
-  # Font effects
-  readonly DIM="\[$(tput dim)\]"
-  readonly REVERSE="\[$(tput rev)\]"
-  readonly RESET="\[$(tput sgr0)\]"
-  readonly BOLD="\[$(tput bold)\]"
+    # Font effects
+    readonly DIM="\[$(tput dim)\]"
+    readonly REVERSE="\[$(tput rev)\]"
+    readonly RESET="\[$(tput sgr0)\]"
+    readonly BOLD="\[$(tput bold)\]"
+    export __PROMPT_COLORS_DEFINED="true"
+fi
 
   # Generate terminal colour codes
   # $1 is an int (a colour) and $2 must be 'fg' or 'bg'
@@ -222,7 +225,7 @@ __powerline() {
     # https://github.com/pypa/virtualenv/blob/a9b4e673559a5beb24bac1a8fb81446dd84ec6ed/virtualenv_embedded/activate.sh#L62
     # License: MIT
     if [ -n "$VIRTUAL_ENV" ]; then
-      local venv
+      local venv; local ref_symbol
       # In pcmode (and only pcmode) the contents of
       # $gitstring are subject to expansion by the shell.
       # Avoid putting the raw ref name in the prompt to
@@ -239,7 +242,7 @@ __powerline() {
       if shopt -q promptvars; then
         export __venv_ps1_block
         __venv_ps1_block=$(basename "$VIRTUAL_ENV")
-        venv="$ref_symbol \${__venv_ps1_block}"
+        venv="$ref_symbol\${__venv_ps1_block}"
       else
         venv="$(basename "$VIRTUAL_ENV")"
       fi
@@ -377,8 +380,8 @@ __powerline() {
     __virtualenv_block
     PS1+=$__block_text
 
-    __user_block
-    PS1+=$__block_text
+    # __user_block
+    # PS1+=$__block_text
 
     __pwd_block
     PS1+=$__block_text
