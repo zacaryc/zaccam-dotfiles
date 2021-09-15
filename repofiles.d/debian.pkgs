@@ -1,0 +1,29 @@
+#ansible
+#ansible-lint
+bat
+cargo
+cmatrix
+curl
+dos2unix
+exuberant-ctags
+fd-find
+git-flow
+golang
+jq
+lastpass-cli
+most
+mypy
+neofetch
+nmap
+# npm
+neovim
+pandoc
+# python3
+rename
+ripgrep
+ruby
+rustc
+shellcheck
+sqlformat
+tree
+zip

@@ -18,6 +18,3 @@ if [ -n "$BASH_VERSION" ]; then
 	. "${HOME}/.bashrc"
     fi
 fi
-
-# Linux brew activate
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
