@@ -115,6 +115,8 @@ function install() {
     done
     [ -d ~/zaccam-dotfiles/.config ] && \
         ln -sf ~/zaccam-dotfiles/.config ~/.config
+    [ -d ~/zaccam-dotfiles/.bin ] && \
+        ln -sf ~/zaccam-dotfiles/.bin ~/.bin
     _print_header "Dotfiles have been installed!"
 }
 
@@ -198,6 +200,7 @@ function setup() {
     check_create_dir "${HOME}/Projects"
     check_create_dir "${HOME}/.tmuxinator"
     check_create_dir "${HOME}/.repos.d/"
+    check_create_dir "${HOME}/.bin"
 
     setup_git_details
     sync_repo_list
