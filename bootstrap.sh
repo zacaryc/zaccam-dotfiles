@@ -191,7 +191,10 @@ function setup() {
 
     _print_header "Initial Setup"
     check_create_dir "${HOME}/git"
-    check_create_dir "${HOME}/git/{work,projects,reference,misc}"
+    check_create_dir "${HOME}/git/work"
+    check_create_dir "${HOME}/git/projects"
+    check_create_dir "${HOME}/git/reference"
+    check_create_dir "${HOME}/git/misc"
     check_create_dir "${HOME}/Projects"
     check_create_dir "${HOME}/.tmuxinator"
     check_create_dir "${HOME}/.repos.d/"
