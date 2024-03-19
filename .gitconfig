@@ -3,7 +3,7 @@
 [core]
     eol = auto
     autocrlf = false
-    editor = vim
+    editor = nvim
     excludesfile = ~/.global_gitignore
 [alias]
     co = checkout
