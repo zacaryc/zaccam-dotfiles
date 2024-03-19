@@ -71,7 +71,9 @@ alias cdv="cd ~/.vim/"
 # `v` with no arguments opens the current directory in Vim, otherwise opens the
 # given location
 function v() {
-    if [ -f /usr/local/bin/vim ]; then
+    if [ -f /usr/bin/nvim ]; then
+        VIMPATH=/usr/bin/nvim
+    elif [ -f /usr/local/bin/vim ]; then
         VIMPATH=/usr/local/bin/vim
     else
         VIMPATH=/usr/bin/vim
