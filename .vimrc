@@ -91,6 +91,9 @@ Plug 'Konfekt/FastFold'
 " Lint
 Plug 'w0rp/ale'
 
+" Syntax
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 call plug#end()
 endif
 
