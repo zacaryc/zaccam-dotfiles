@@ -98,7 +98,7 @@ export HISTIGNORE="&:bg:fg:ll:h:clear:exit:history:[ ]*:ls"
 export HISTTIMEFORMAT="$(echo -e ${BCyan})[%d/%m %H:%M:%S]$(echo -e ${NC}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
-export EDITOR=vim
+export EDITOR=nvim
 if command -V most &>/dev/null; then
     export PAGER=most
 else
