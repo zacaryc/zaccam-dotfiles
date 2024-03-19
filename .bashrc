@@ -34,13 +34,13 @@ export FZF_DEFAULT_OPTS='
 	 --color=marker:#b294bb,spinner:#373b41,header:#8c9440'
 
 # Source git prompt niceties
-if [ -f ${HOME}/.git-prompt.sh ]; then
-    source ${HOME}/.git-prompt.sh
+if [ -f "${HOME}/.git-prompt.sh" ]; then
+    source "${HOME}/.git-prompt.sh"
 fi
 
 if [ -d "${DOTFILES}" ]; then
-    if [ -d ${DOTFILES}/.dotfiles ]; then
-        source ${DOTFILES}/.dotfiles/prompt.bash
+    if [ -d "${DOTFILES}/.dotfiles" ]; then
+        source "${DOTFILES}/.dotfiles/prompt.bash"
     fi
 fi
 
@@ -48,7 +48,7 @@ fi
 # Colours
 ####################
 # Normal Colors
-if [ -z $_COLORS_DEFINED ]; then
+if [ -z "$_COLORS_DEFINED" ]; then
     readonly Black='\e[0;30m'        # Black
     readonly Red='\033[0;31m'        # Red
     readonly Green='\033[0;32m'      # Green
@@ -164,3 +164,5 @@ PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH})
 
 # Export PATH back out
 export PATH
+
+[ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
