@@ -5,10 +5,17 @@
 ##
 # System Specific Functions
 ##
-alias l="ls --color=auto"
-alias ls="ls --color=auto"
-alias ll="ls -lah --color=auto"
-alias la="ll -ah"
+if [ -x "$(command -v exa)" ]; then
+    alias l="exa --color=auto"
+    alias ls="exa --color=auto"
+    alias ll="exa -l --color=auto --icons"
+    alias la="ll -ah"
+else
+    alias l="ls --color=auto"
+    alias ls="ls --color=auto"
+    alias ll="ls -lah --color=auto"
+    alias la="ll -ah"
+fi
 alias lss="svn st"
 alias claer="clear"
 alias clera="clear"
@@ -62,6 +69,7 @@ alias cdb="cd ~/.bin/"
 alias cdg="cd ~/git/"
 alias cds="cd ~/svn/"
 alias cdv="cd ~/.vim/"
+alias cdc="cd ~/.config/"
 
 
 ####################
