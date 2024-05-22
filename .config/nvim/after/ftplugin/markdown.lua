@@ -5,4 +5,4 @@ vim.cmd [[
 ]]
 
     vim.opt_local.foldlevel = 1
-    vim.opt_local.spell = 1
+    vim.opt_local.spell = true

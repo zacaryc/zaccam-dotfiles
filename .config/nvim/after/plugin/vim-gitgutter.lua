@@ -1,3 +1,1 @@
-vim.cmd [[
-    set updatetime=250
-]]
+vim.opt.updatetime = 250

@@ -84,6 +84,11 @@ _G.packer_plugins = {
     path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/ale",
     url = "https://github.com/w0rp/ale"
   },
+  catppuccin = {
+    loaded = true,
+    path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/catppuccin",
+    url = "https://github.com/catppuccin/nvim"
+  },
   delimitMate = {
     loaded = true,
     path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/delimitMate",
@@ -104,15 +109,56 @@ _G.packer_plugins = {
     path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/goyo.vim",
     url = "https://github.com/junegunn/goyo.vim"
   },
+  ["kanagawa.nvim"] = {
+    loaded = true,
+    path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/kanagawa.nvim",
+    url = "https://github.com/rebelot/kanagawa.nvim"
+  },
   ["limelight.vim"] = {
     loaded = true,
     path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/limelight.vim",
     url = "https://github.com/junegunn/limelight.vim"
   },
+  ["lualine.nvim"] = {
+    loaded = true,
+    path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/lualine.nvim",
+    url = "https://github.com/nvim-lualine/lualine.nvim"
+  },
+  ["material.nvim"] = {
+    loaded = true,
+    path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/material.nvim",
+    url = "https://github.com/marko-cerovac/material.nvim"
+  },
+  ["nightfox.nvim"] = {
+    loaded = true,
+    path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/nightfox.nvim",
+    url = "https://github.com/edeneast/nightfox.nvim"
+  },
+  ["nvim-hybrid"] = {
+    loaded = true,
+    path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/nvim-hybrid",
+    url = "https://github.com/PHSix/nvim-hybrid"
+  },
   ["nvim-treesitter"] = {
     loaded = true,
     path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
     url = "https://github.com/nvim-treesitter/nvim-treesitter"
+  },
+  ["nvim-web-devicons"] = {
+    loaded = false,
+    needs_bufread = false,
+    path = "/home/zaccam/.local/share/nvim/site/pack/packer/opt/nvim-web-devicons",
+    url = "https://github.com/nvim-tree/nvim-web-devicons"
+  },
+  ["onedark.nvim"] = {
+    loaded = true,
+    path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/onedark.nvim",
+    url = "https://github.com/navarasu/onedark.nvim"
+  },
+  ["onedarkpro.nvim"] = {
+    loaded = true,
+    path = "/home/zaccam/.local/share/nvim/site/pack/packer/start/onedarkpro.nvim",
+    url = "https://github.com/olimorris/onedarkpro.nvim"
   },
   ["packer.nvim"] = {
     loaded = true,

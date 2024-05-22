@@ -13,6 +13,11 @@ end
 
 local packer_bootstrap = ensure_packer()
 
+-- TODO: Test TODO
+-- FIX: Test FIX
+-- WARN: Test WARN
+-- HACK: Test Hack
+-- NOTE: Test
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   --
@@ -26,20 +31,33 @@ return require('packer').startup(function(use)
     --" UI
     use 'w0ng/vim-hybrid'
     -- use 'HoNamDuong/hybrid.nvim' -- Treesitter compatible
+    use 'marko-cerovac/material.nvim'
+    use 'PHSix/nvim-hybrid'
+    use 'navarasu/onedark.nvim'
+    use 'edeneast/nightfox.nvim'
+    use 'olimorris/onedarkpro.nvim'
+    use 'rebelot/kanagawa.nvim'
+    use { "catppuccin/nvim", as = "catppuccin" }
+
     use 'altercation/vim-colors-solarized'
     use 'vim-airline/vim-airline'
     use 'vim-airline/vim-airline-themes'
     use 'tpope/vim-vinegar'
     use 'ryanoasis/vim-devicons'
     use {
-        'folke/todo-comments.nvim',
+      'nvim-lualine/lualine.nvim',
+      requires = { 'nvim-tree/nvim-web-devicons', opt = true }
+    }
+
+    --" Edit
+    use 'majutsushi/tagbar'-- , { 'on': 'TagbarToggle' }
+    vim.g.tagbar_sort = 0
+    use {
+        'folke/todo-comments.nvim', -- Adds custom highlighting of todo/warning/notes etc
         requires = {
             { 'nvim-lua/plenary.nvim' },
         }
     }
-    --" Edit
-    use 'majutsushi/tagbar'-- , { 'on': 'TagbarToggle' }
-    vim.g.tagbar_sort = 0
     use 'nathanaelkane/vim-indent-guides'
     use 'Raimondi/delimitMate'
 

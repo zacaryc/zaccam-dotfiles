@@ -1,33 +1,46 @@
+-- Display Settings
 
--- Display Settings {{{
+-- Set Font
+-- vim.opt.guifont = 'DejaVuSansMono Nerd Font'
+vim.opt.guifont = 'Hack Nerd Font:h13'
+
+-- Set Colouring Themes
+vim.cmd("set t_Co=256")
+vim.cmd("let g:hybrid_use_Xresources = 1")
+
+-- Set Colorscheme
+vim.opt.background = 'dark'
+vim.cmd.colorscheme("hybrid")
+-- vim.cmd.colorscheme("kanagawa-dragon")
+
+-- Set Airline Theme
 vim.cmd[[
-    " Set Colouring Themes
-    set t_Co=256
-    let g:hybrid_use_Xresources = 1
-
-    set background=dark
-    colorscheme hybrid
-    "colorscheme two-firewatch
-    "set guifont=DejaVuSansMono\ Nerd\ Font
-    set guifont=Hack\ Nerd\ Font:h13
     let g:airline_theme="hybrid"
     let g:airline_powerline_fonts = 1
     let g:webdevicons_enable_airline_statusline = 1
-    let g:webdevicons_enable_ctrlp = 1
+]]
 
-    " Set this. Airline will handle the rest.
-    let g:airline#extensions#ale#enabled = 1
+-- Set this. Airline will handle the rest.
+vim.cmd("let g:airline#extensions#ale#enabled = 1")
 
+vim.cmd[[
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
     endif
     let g:airline_symbols.space = " "
-
-    if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && v:version >= 700
-        let &listchars = "tab:\u21e5\u00b7,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
-        let &fillchars = "vert:\u259a,fold:\u00b7"
-    else
-        set listchars=tab:>\ ,trail:-,extends:>,precedes:<
-    endif
 ]]
---"}}}
+
+-- Set List Characters and Fill Characters
+vim.opt.listchars:append {
+    tab = '⇥·',
+    trail = '␣',
+    extends = '⇉',
+    precedes = '⇇',
+    nbsp = '⚭'
+}
+
+vim.opt.fillchars:append {
+    vert = '▚',
+    fold = '·'
+}
+
