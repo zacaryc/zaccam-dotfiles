@@ -10,6 +10,7 @@ if [ -x "$(command -v exa)" ]; then
     alias ls="exa --color=auto"
     alias ll="exa -l --color=auto --icons"
     alias la="ll -ah"
+    alias tree="exa --icons --tree"
 else
     alias l="ls --color=auto"
     alias ls="ls --color=auto"
@@ -45,7 +46,7 @@ alias gf='git fetch --all'
 alias gd='git diff'
 alias gsl='git stash list'
 alias gsp='git stash pop'
-alias gp='git pull'
+alias gp='git up'
 alias gitclean='git branch --merged | egrep -v "(^\*|master|dev|production)" | xargs git branch -d'
 alias gpu='git push -u origin $(git rev-parse --abbrev-ref HEAD)'
 alias grh='git reset --hard'
@@ -60,6 +61,7 @@ alias bashrc="vim ~/.$(basename ${SHELL})rc"
 alias zshrc="vim ~/.$(basename ${SHELL})rc"
 alias srcvim="source ~/.vimrc"
 alias vimrc="vim ~/.vimrc"
+alias nvimrc="v ~/.config/nvim"
 alias tarc="tar -czvf"
 alias tarx="tar -xvzf"
 alias zdiff="sdiff -s -W -w250"
@@ -196,7 +198,12 @@ git_purge()
 # vf() { fzf | xargs -r -I % $EDITOR % ;}
 function vf()
 {
-    vim "$(fzf --select-1 --exit-0)"
+    v "$(fzf --select-1 --exit-0)"
+}
+
+function vb()
+{
+    vim "$(fd . '/home/zaccam/.bin' | fzf --select-1 --exit-0)"
 }
 
 function mynewcd() {
@@ -247,6 +254,12 @@ function mynewcd() {
     done
 }
 
+function cdff()
+{
+    cd "$(fd . --type d | fzf --exit-0 --select-1)" || return
+}
+alias cdf="cdff"
+
 function custom_changedir()
 {
     # If there is a custom check tag, check the project type
@@ -273,3 +286,6 @@ alias cdp='custom_changedir ${HOME}/git/projects'
 alias tf='tmuxinator-fzf-start.sh'
 
 
+if [ -f "${HOME}/.bash_aliases_local" ]; then
+    source "${HOME}/.bash_aliases_local"
+fi
