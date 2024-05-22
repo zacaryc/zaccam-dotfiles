@@ -18,3 +18,6 @@ if [ -n "$BASH_VERSION" ]; then
 	. "${HOME}/.bashrc"
     fi
 fi
+
+echo "Hello Mr. Campbell, you joined PROS $(( ($(date +%s) - $(date +%s -d '2019/07/03')) / 86400 )) days ago"
+echo "There are $(( $(date -d 25-Dec +%j) - $(date +%j))) days until Christmas."
