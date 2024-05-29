@@ -19,5 +19,17 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-echo "Hello Mr. Campbell, you joined PROS $(( ($(date +%s) - $(date +%s -d '2019/07/03')) / 86400 )) days ago"
+function greeting {
+    local hour=$(date +%k)
+
+    if (( hour < 12 )); then
+        echo "Доброе утро"
+    elif (( hour < 18 )); then
+        echo "Добрый день"
+    else
+        echo "Добрый вечер"
+    fi
+}
+
+echo "$(greeting) Mr. Campbell. You joined PROS $(( ($(date +%s) - $(date +%s -d '2019/07/03')) / 86400 )) days ago"
 echo "There are $(( $(date -d 25-Dec +%j) - $(date +%j))) days until Christmas."
