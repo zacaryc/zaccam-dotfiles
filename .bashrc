@@ -148,11 +148,6 @@ export POWERLINE_FONT=1
 # Completions
 ####################
 
-# if [ -f "${HOME}/.bash_completion_tmux" ]
-# then
-# 	source "${HOME}/.bash_completion_tmux" 2>/dev/null 1>/dev/null
-# fi
-
 # This has to be at the end
 if [ -f "${HOME}/.bash_alias_completion" ]
 then
@@ -177,6 +172,11 @@ fi
 # Set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Set PATH to include cargo if exists
+if [ -d "$HOME/.cargo/bin" ] ; then
+    PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 # Dedupe the PATH environment variable
