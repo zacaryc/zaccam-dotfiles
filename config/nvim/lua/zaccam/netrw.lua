@@ -1,16 +1,16 @@
--- " Netrw {{{
+-- Netrw
+--
+vim.g.netrw_banner = 0
+vim.g.netrw_browse_split = 4
+vim.g.netrw_altv = 1
+vim.g.netrw_winsize = 20
+vim.cmd('let g:netrw_list_hide = &wildignore')
+
+-- -----------------------------
+--  Fix up for netrw behaviour
+--  https://www.reddit.com/r/vim/comments/6jcyfj/toggle_lexplore_properly/
+-- -----------------------------
 vim.cmd[[
-    let g:netrw_banner = 0
-    let g:netrw_browse_split = 4
-    let g:netrw_altv = 1
-    let g:netrw_winsize = 20
-    let g:netrw_list_hide = &wildignore
-
-    "-----------------------------
-    " Fix up for netrw behaviour
-    " https://www.reddit.com/r/vim/comments/6jcyfj/toggle_lexplore_properly/
-    "-----------------------------
-
     let g:NetrwIsOpen=0
 
     function! ToggleNetrw()
@@ -29,14 +29,8 @@ vim.cmd[[
         endif
     endfunction
 ]]
---" }}}
---" }}}
--- " Status Line {{{
-vim.cmd[[
-    " Set statusline
-    set statusline+=%#warningmsg#
-    " set statusline+=%{SyntasticStatuslineFlag()}
-    set statusline+=%{fugitive#statusline()}
-    set statusline+=%*
-]]
---"}}}
+
+--  Set statusline
+-- vim.cmd('set statusline+=%#warningmsg#')
+-- vim.cmd('set statusline+=%{fugitive#statusline()}')
+-- vim.cmd('set statusline+=%*')
