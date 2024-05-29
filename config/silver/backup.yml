@@ -1,0 +1,37 @@
+separator:
+  right:
+    thick: 
+    thin: 
+  left:
+    thick: 
+    thin: 
+left:
+- name: status
+  color:
+    background: 'red'
+    foreground: '0'
+  args: []
+- name: time
+  color:
+    background: 'green'
+    foreground: '0'
+  args: []
+- name: dir
+  color:
+    background: '0'
+    foreground: '7'
+  args: []
+- name: git
+  color:
+    background: 'green'
+    foreground: 'black'
+  args: []
+right: []
+icons: {}
+icon_set: unicode
+cmdtime_threshold: 0s
+dir:
+  aliases: {}
+  length: null
+git:
+  ignore_dirs: []

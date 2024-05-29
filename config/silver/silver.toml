@@ -1,0 +1,17 @@
+[[left]]
+name = "time"
+color.background = "red"
+color.foreground = "green"
+
+[[left]]
+name = "dir"
+color.background = "red"
+color.foreground = "black"
+
+[[left]]
+name = "git"
+color.background = "green"
+color.foreground = "black"
+
+[[dir.aliases]]
+"\ue627" = "~/git"

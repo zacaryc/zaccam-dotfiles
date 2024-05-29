@@ -1,0 +1,37 @@
+separator:
+  right:
+    thick: 
+    thin: 
+  left:
+    thick: 
+    thin: 
+left:
+- name: status
+  color:
+    background: 'red'
+    foreground: '0'
+  args: []
+- name: time
+  color:
+    background: 'black'
+    foreground: 'green'
+  args: []
+- name: dir
+  color:
+    background: '4b5259'
+    foreground: 'white'
+  args: []
+- name: git
+  color:
+    background: 'green'
+    foreground: 'black'
+  args: []
+right: []
+icons: {}
+icon_set: nerd
+cmdtime_threshold: 1s
+dir:
+  aliases: { "\ue702":"~/git", "\ue5fc":"~/git/work/", "\uf015":"~"}
+  length: null
+git:
+  ignore_dirs: []
