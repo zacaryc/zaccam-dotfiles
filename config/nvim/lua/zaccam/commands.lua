@@ -1,23 +1,21 @@
 -- All of the commands
---
+
 -- Commands {{{
 vim.cmd [[
-
 command! -bar -nargs=1 -complete=file E :exe "edit ".substitute(<q-args>,'\(.*\):\(\d\+\):\=$','+\2 \1','')
 command! -bar -nargs=? -bang Scratch :silent enew<bang>|set buftype=nofile bufhidden=hide noswapfile buflisted filetype=<args> modifiable
-command! -bar -count=0 RFC     :e https://www.ietf.org/rfc/rfc<count>.txt|setl ro noma
 function! s:scratch_maps() abort
     nnoremap <silent> <buffer> == :Scratch<CR>
     nnoremap <silent> <buffer> =" :Scratch<Bar>put<Bar>1delete _<Bar>filetype detect<CR>
     nnoremap <silent> <buffer> =* :Scratch<Bar>put *<Bar>1delete _<Bar>filetype detect<CR>
     nnoremap          <buffer> =f :Scratch<Bar>setfiletype<Space>
 endfunction
-
 ]]
--- " }}}
+
+-- }}}
 -- Autocommands {{{
+-- -------------------------
 vim.cmd [[
-" -------------------------
 
 if has("autocmd")
 
@@ -163,31 +161,11 @@ if has("autocmd")
     augroup END
     " }}}
 
-
-endif " has("autocmd")
-
-]]
---}}}
--- Generating Help Files {{{
-vim.cmd [[
-
-" Only for Vim 8
-if v:version > 800
-    " Load all plugins now.
-    " " Plugins need to be added to runtimepath before helptags can be
-    " generated.
-    packloadall
-    " " Load all of the helptags now, after plugins have been loaded.
-    " " All messages and errors will be ignored.
-    silent! helptags ALL
 endif
 ]]
--- }}}
+
+--}}}
 -- Miscellaneous {{{
-vim.cmd [[
-
-"She-Bang
-inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
-
-]]
+-- She-Bang
+vim.cmd[[inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)]]
 -- }}}
