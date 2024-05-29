@@ -1,94 +1,85 @@
 
--- Vim Base Settings
-vim.opt.syntax = "on"
-vim.opt.filetype = "on"
-vim.opt.filetype.plugin = "on"
-vim.opt.filetype.indent = "on"
+-- Make the settings below more succinct
+local opt = vim.opt
+
+-- Vim Base Settings {{{
+opt.syntax = "on"
+opt.filetype = "on"
+opt.filetype.plugin = "on"
+opt.filetype.indent = "on"
 
 -- Always show status bar
-vim.opt.laststatus = 2
+opt.laststatus = 2
 
 -- Don't require backward support for vi
-vim.opt.compatible = false
+opt.compatible = false
 
+-- }}}
 
--- Vim Settings {{{
+-- Indents and Alignment {{{
+opt.tabstop = 4
+opt.softtabstop = 4
+opt.shiftwidth = 4
+opt.textwidth = 80
+opt.autoindent = true
+opt.smartindent = true
+opt.expandtab = true
+opt.formatoptions = opt.formatoptions + 'j'
 
--- Indents and Alignment
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.textwidth = 80
-vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.showcmd = true
+-- }}}
 
--- Display
-vim.opt.numberwidth = 4
-vim.opt.expandtab = true
-vim.opt.ruler = true
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.scrolloff = 8
--- vim.opt.cursorline!
+-- Display {{{
+opt.ruler = true
+opt.number = true
+opt.relativenumber = true
+opt.numberwidth = 4
+opt.scrolloff = 8
+opt.showcmd = true
+opt.cmdheight=2
+-- opt.cursorline!
+
+-- Breaks
+opt.breakindent = true
+opt.showbreak = ' +'
+
+-- }}}
+
+-- Functionality {{{
 
 -- Add backspace ,start <- to backspace past where you entered insert
-vim.opt.backspace = { indent, eol }
+opt.backspace = { indent, eol }
 
-vim.opt.ttyfast = true
-vim.opt.autoread = true
-vim.opt.more = true
-vim.opt.hlsearch = true
-vim.opt.smartcase = true -- " Case insensitive searches become sensitive with capitals
-vim.opt.smarttab = true -- " sw at start of line, sts everywhere else
+opt.hlsearch = true
+opt.smartcase = true -- " Case insensitive searches become sensitive with capitals
+opt.smarttab = true -- " sw at start of line, sts everywhere else
+opt.ttyfast = true
+opt.autoread = true
+opt.more = true
 
-vim.opt.fileformats = { unix, dos, mac }
+opt.fileformats = { unix, dos, mac }
 
-vim.opt.pastetoggle= '<localleader>p'
+vim.keymap.set("n", "<localleader>p", ":set paste!<CR>")
 
-vim.opt.foldopen = vim.opt.foldopen + 'jump'
-vim.opt.formatoptions = vim.opt.formatoptions + 'j'
-vim.opt.dictionary = vim.opt.dictionary + '/usr/share/dict/words'
+opt.dictionary = opt.dictionary + '/usr/share/dict/words'
+opt.spelllang = { en_au, en_gb }
 
-vim.cmd[[
-    " Disable matchparen which jumps the cursor on matching parentheses "
-    let loaded_matchparen = 1
-]]
-
-vim.cmd[[
-    if exists('+breakindent')
-        set breakindent showbreak=\ +
-    endif
-]]
-
-vim.opt.cmdheight=2
-
--- NOTE: Not working in lua
--- vim.cmd[[
---     if has("eval")
---         let &highlight = substitute(&highlight,'NonText','SpecialKey','g')
---     endif
--- ]]
-
-vim.cmd[[
-    if exists("+spelllang")
-        set spelllang=en_au,en_gb
-    endif
-]]
+-- Disable matchparen which jumps the cursor on matching parentheses "
+vim.cmd('let loaded_matchparen = 1')
 
 -- If RG installed, use it as the vimgrep default
 if vim.fn.executable('rg') == 1 then
-  vim.opt.grepprg = 'rg --vimgrep'
-  vim.opt.grepformat = '%f:%l:%c:%m'
+  opt.grepprg = 'rg --vimgrep'
+  opt.grepformat = '%f:%l:%c:%m'
 end
 
 -- }}}
+
 -- Folding {{{
 
-vim.opt.foldmethod = "marker"
-vim.opt.foldlevelstart = 0
-
-vim.opt.foldmarker = '{{{,}}}'
+opt.foldopen = opt.foldopen + 'jump'
+opt.foldmethod = "marker"
+opt.foldlevelstart = 0
+opt.foldmarker = '{{{,}}}'
 
 -- Set space to toggle folds
 vim.keymap.set({"n", "v"}, "<Space>", "za")
