@@ -33,14 +33,33 @@ export FZF_DEFAULT_OPTS='
 	 --color=info:#85678f,prompt:#81a2be,pointer:#a54242
 	 --color=marker:#b294bb,spinner:#373b41,header:#8c9440'
 
-# Source git prompt niceties
-if [ -f "${HOME}/.git-prompt.sh" ]; then
-    source "${HOME}/.git-prompt.sh"
+####################
+# Set PROMPT
+####################
+
+# Set PATH to include cargo if exists
+if [ -d "$HOME/.cargo/bin" ] ; then
+    PATH="$HOME/.cargo/bin:$PATH"
 fi
 
-if [ -d "${DOTFILES}" ]; then
-    if [ -d "${DOTFILES}/.dotfiles" ]; then
-        source "${DOTFILES}/.dotfiles/prompt.bash"
+export PATH
+
+if command -V silver &>/dev/null; then
+    PROMPT_COMMAND=silver_prompt
+	silver_prompt() {
+		PS1="$(code=$? jobs=$(jobs -p | wc -l) silver lprint)"
+	}
+	export VIRTUAL_ENV_DISABLE_PROMPT=1
+else
+    # Source git prompt niceties
+    if [ -f "${HOME}/.git-prompt.sh" ]; then
+        source "${HOME}/.git-prompt.sh"
+    fi
+
+    if [ -d "${DOTFILES}" ]; then
+        if [ -d "${DOTFILES}/.dotfiles" ]; then
+            source "${DOTFILES}/.dotfiles/prompt.bash"
+        fi
     fi
 fi
 
