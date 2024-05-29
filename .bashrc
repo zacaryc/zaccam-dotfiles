@@ -113,6 +113,7 @@ export POWERLINE_FONT=1
 # Load Bash Aliases
 ####################
 [ -f "${HOME}/.bash_aliases" ] && . "${HOME}/.bash_aliases"
+[ -f "${HOME}/.bash_aliases_local" ] && . "${HOME}/.bash_aliases_local"
 
 
 ####################
