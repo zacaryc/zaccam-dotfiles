@@ -178,6 +178,10 @@ function sync_repo_list()
     for f in $(find $DOTFILES/repofiles.d/); do
         ln -sf ${f} ${HOME}/.repos.d/
     done
+    # Need to link in fd because an existing program uses the shortcut fd, and
+    # thus we have to manually link it - from fd installation page
+    [ -z "$(which fdfind)" ] && ln -s "$(which fdfind)" /usr/local/bin/fd
+    [ -f /usr/bin/batcat ] && ln -s /usr/bin/batcat /usr/local/bin/bat
 }
 
 
