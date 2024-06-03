@@ -17,8 +17,6 @@ if [ -f "${HOME}/.bashrc_local" ]; then
     . "${HOME}/.bashrc_local"
 fi
 
-[ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
-
 if ! command -V fd &>/dev/null; then
     export FD_EXISTS=0
 else
@@ -114,7 +112,7 @@ NOW=$(date "+%Y%m%d")
 ####################
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
 export HISTIGNORE="&:bg:fg:ll:h:clear:exit:history:[ ]*:ls"
-export HISTTIMEFORMAT="$(echo -e ${BCyan})[%d/%m %H:%M:%S]$(echo -e ${NC}) "
+export HISTTIMEFORMAT="$(echo -e ${BCyan})[%F %T]$(echo -e ${NC}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
 export EDITOR=nvim
@@ -185,4 +183,5 @@ PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH})
 # Export PATH back out
 export PATH
 
+# Setup fzf
 [ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
