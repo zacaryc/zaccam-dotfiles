@@ -72,23 +72,27 @@ alias cdg="cd ~/git/"
 alias cds="cd ~/svn/"
 alias cdv="cd ~/.vim/"
 alias cdc="cd ~/.config/"
+alias cdd="cd ~/zaccam-dotfiles/"
 
 
 ####################
 # FUNCTIONS
 ####################
 
+
 # `v` with no arguments opens the current directory in Vim, otherwise opens the
 # given location
-function v() {
-    if [ -f /usr/bin/nvim ]; then
-        VIMPATH=/usr/bin/nvim
-    elif [ -f /usr/local/bin/vim ]; then
-        VIMPATH=/usr/local/bin/vim
-    else
-        VIMPATH=/usr/bin/vim
-    fi
 
+# Set the path on startup to continue using
+if [ -f /usr/bin/nvim ]; then
+    VIMPATH=/usr/bin/nvim
+elif [ -f /usr/local/bin/vim ]; then
+    VIMPATH=/usr/local/bin/vim
+else
+    VIMPATH=/usr/bin/vim
+fi
+
+function v() {
     if [ $# -eq 0 ]; then
         ${VIMPATH} .
     else
