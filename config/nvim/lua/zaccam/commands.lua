@@ -1,7 +1,7 @@
 -- All of the commands
 
 -- Commands {{{
-vim.cmd [[
+vim.cmd([[
 command! -bar -nargs=1 -complete=file E :exe "edit ".substitute(<q-args>,'\(.*\):\(\d\+\):\=$','+\2 \1','')
 command! -bar -nargs=? -bang Scratch :silent enew<bang>|set buftype=nofile bufhidden=hide noswapfile buflisted filetype=<args> modifiable
 function! s:scratch_maps() abort
@@ -10,12 +10,12 @@ function! s:scratch_maps() abort
     nnoremap <silent> <buffer> =* :Scratch<Bar>put *<Bar>1delete _<Bar>filetype detect<CR>
     nnoremap          <buffer> =f :Scratch<Bar>setfiletype<Space>
 endfunction
-]]
+]])
 
 -- }}}
 -- Autocommands {{{
 -- -------------------------
-vim.cmd [[
+vim.cmd([[
 
 if has("autocmd")
 
@@ -162,10 +162,18 @@ if has("autocmd")
     " }}}
 
 endif
-]]
+]])
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+})
 
 --}}}
 -- Miscellaneous {{{
 -- She-Bang
-vim.cmd[[inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)]]
+vim.cmd([[inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)]])
 -- }}}
