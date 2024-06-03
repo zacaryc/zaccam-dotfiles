@@ -1039,3 +1039,5 @@ gradle-app.setting
 \.vim/spell/.*\.spl
 
 packer_compiled.lua
+
+config/gh/
