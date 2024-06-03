@@ -1037,3 +1037,5 @@ gradle-app.setting
 # Custom Added By Zac
 ###############################
 \.vim/spell/.*\.spl
+
+packer_compiled.lua
