@@ -1,3 +1,6 @@
+#!/bin/bash
+# shellcheck disable=SC2139
+
 #------------------------------------
 # User specific aliases and functions
 #------------------------------------
@@ -51,7 +54,6 @@ alias gitclean='git branch --merged | egrep -v "(^\*|master|dev|production)" | x
 alias gpu='git push -u origin $(git rev-parse --abbrev-ref HEAD)'
 alias grh='git reset --hard'
 alias gg='git grep'
-# shellcheck disable=SC2139
 alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
 alias gfl='git flow'
 ##
@@ -73,7 +75,6 @@ alias cdg="cd ~/git/"
 alias cds="cd ~/svn/"
 alias cdv="cd ~/.vim/"
 alias cdc="cd ~/.config/"
-# shellcheck disable=SC2139
 alias cdd="cd ${DOTFILES}"
 
 
@@ -157,7 +158,6 @@ function gdi() # Get Deployment Items
     for item in $(gcf); do echo "|${item}|"; done
 }
 
-# shellcheck disable=SC2139
 alias gdif="sh /home/${USER}/.bin/get_full_deployment.sh"
 
 
@@ -215,7 +215,6 @@ function vg()
 
 function vb()
 {
-    # shellcheck disable=SC2139
     fd -u . "${HOME}/.bin" | fzf --select-1 --exit-0 --bind "enter:become(${VIMPATH} {})"
 }
 
