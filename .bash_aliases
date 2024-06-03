@@ -51,6 +51,7 @@ alias gitclean='git branch --merged | egrep -v "(^\*|master|dev|production)" | x
 alias gpu='git push -u origin $(git rev-parse --abbrev-ref HEAD)'
 alias grh='git reset --hard'
 alias gg='git grep'
+# shellcheck disable=SC2139
 alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
 alias gfl='git flow'
 ##
@@ -72,7 +73,8 @@ alias cdg="cd ~/git/"
 alias cds="cd ~/svn/"
 alias cdv="cd ~/.vim/"
 alias cdc="cd ~/.config/"
-alias cdd="cd ~/zaccam-dotfiles/"
+# shellcheck disable=SC2139
+alias cdd="cd ${DOTFILES}"
 
 
 ####################
@@ -155,14 +157,15 @@ function gdi() # Get Deployment Items
     for item in $(gcf); do echo "|${item}|"; done
 }
 
+# shellcheck disable=SC2139
 alias gdif="sh /home/${USER}/.bin/get_full_deployment.sh"
 
 
 function deadsyms()
 {
     for f in $(find . -type l -exec sh -c "file -b {} | grep -q ^broken" \; -print 2>/dev/null); do
-        echo Unlinking ${f};
-        unlink ${f};
+        echo "Unlinking ${f}";
+        unlink "${f}";
     done
 }
 
@@ -175,8 +178,8 @@ function mydf()         # Pretty-print of 'df' output.
           echo -e "${fs}\" :No such file or directory\"" ; continue
         fi
 
-        local info=( $(command df -P $fs | awk 'END{ print $2,$3,$5 }') )
-        local free=( $(command df -Pkh $fs | awk 'END{ print $4 }') )
+        local info="( $(command df -P ${fs} | awk 'END{ print $2,$3,$5 }') )"
+        local free="( $(command df -Pkh ${fs} | awk 'END{ print $4 }') )"
         local nbstars=$(( 20 * ${info[1]} / ${info[0]} ))
         local out="["
         for ((j=0;j<20;j++)); do
@@ -186,7 +189,7 @@ function mydf()         # Pretty-print of 'df' output.
                out=$out"-"
             fi
         done
-        out=${info[2]}" "${out}"] ("${free}" free on "${fs}")"
+        out="${info[2]}\" \"${out}\"] (\"${free}\" free on \"${fs}\")\""
         echo -e "${out}"
     done
 }
@@ -199,22 +202,26 @@ git_purge()
     done
 }
 
-# vf() { fzf | xargs -r -I % $EDITOR % ;}
 function vf()
 {
     # v "$(fzf --select-1 --exit-0)"
-    # fzf --select-1 --exit-0 | xargs -0 -o $VIMPATH
     fzf --select-1 --exit-0 --bind "enter:become(${VIMPATH} {})"
-}
-
-function vb()
-{
-    fd . '/home/zaccam/.bin' | fzf --select-1 --exit-0 --bind "enter:become(${VIMPATH} {})"
 }
 
 function vg()
 {
     rg --line-number . | fzf --delimiter : --nth 3.. --bind "enter:become(${VIMPATH} {1} +{2})"
+}
+
+function vb()
+{
+    # shellcheck disable=SC2139
+    fd -u . "${HOME}/.bin" | fzf --select-1 --exit-0 --bind "enter:become(${VIMPATH} {})"
+}
+
+function vd()
+{
+    fd -H . "${DOTFILES}" | fzf --select-1 --exit-0 --bind "enter:become(${VIMPATH} {})"
 }
 
 function mynewcd() {
@@ -242,9 +249,9 @@ function mynewcd() {
                 fi
             done
 
-            builtin cd "${toDir}"
+            builtin cd "${toDir}" || return
         else
-            builtin cd "$@";
+            builtin cd "$@" || return;
         fi
         return
     fi
@@ -261,7 +268,7 @@ function mynewcd() {
                 ls -p --color=always "${__cd_path}";
         ')"
         [[ ${#dir} != 0 ]] || return 0
-        builtin cd "$dir" &> /dev/null
+        builtin cd "$dir" &> /dev/null || return 123
     done
 }
 
@@ -289,7 +296,7 @@ function custom_changedir()
         dir="$(fd . --base-directory="${project_root}" --max-depth 1 --type d \
                 | fzf --prompt="Which Project >" --select-1 --exit-0)"
     fi
-    builtin cd "${project_root}/${dir}"
+    builtin cd "${project_root}/${dir}" || return
 }
 alias cdw='custom_changedir ${HOME}/git/work'
 alias cdp='custom_changedir ${HOME}/git/projects'
