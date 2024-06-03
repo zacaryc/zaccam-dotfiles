@@ -37,6 +37,14 @@ opt.scrolloff = 8
 opt.showcmd = true
 opt.cmdheight=2
 -- opt.cursorline!
+-- Keep sign column on by default
+-- opt.signcolumn = "on"
+
+-- Don't show the mode, since it's already in the status line
+opt.showmode = false
+
+-- Show which line cursor is on
+opt.cursorline = true
 
 -- Breaks
 opt.breakindent = true
@@ -49,12 +57,28 @@ opt.showbreak = ' +'
 -- Add backspace ,start <- to backspace past where you entered insert
 opt.backspace = { indent, eol }
 
+-- Set Highlight on search, but clear on pressing <Esc> in normal mode
 opt.hlsearch = true
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+
+-- Preview Substitutions live, as you type
+opt.inccommand = "split"
+
 opt.smartcase = true -- " Case insensitive searches become sensitive with capitals
 opt.smarttab = true -- " sw at start of line, sts everywhere else
 opt.ttyfast = true
 opt.autoread = true
 opt.more = true
+opt.mouse = "a"
+
+-- Sync clipboard between OS and Neovim
+opt.clipboard = "unnamedplus"
+
+-- Save undo history
+opt.undofile = true
+
+-- Decrease Update Time
+opt.updatetime = 250
 
 opt.fileformats = { unix, dos, mac }
 
