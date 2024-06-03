@@ -1,4 +1,3 @@
-
 -- Make the settings below more succinct
 local opt = vim.opt
 
@@ -24,7 +23,7 @@ opt.textwidth = 80
 opt.autoindent = true
 opt.smartindent = true
 opt.expandtab = true
-opt.formatoptions = opt.formatoptions + 'j'
+opt.formatoptions = opt.formatoptions + "j"
 
 -- }}}
 
@@ -35,8 +34,8 @@ opt.relativenumber = true
 opt.numberwidth = 4
 opt.scrolloff = 8
 opt.showcmd = true
-opt.cmdheight=2
--- opt.cursorline!
+opt.cmdheight = 2
+
 -- Keep sign column on by default
 -- opt.signcolumn = "on"
 
@@ -48,7 +47,7 @@ opt.cursorline = true
 
 -- Breaks
 opt.breakindent = true
-opt.showbreak = ' +'
+opt.showbreak = " +"
 
 -- }}}
 
@@ -84,29 +83,30 @@ opt.fileformats = { unix, dos, mac }
 
 vim.keymap.set("n", "<localleader>p", ":set paste!<CR>")
 
-opt.dictionary = opt.dictionary + '/usr/share/dict/words'
+-- Dictionary and Spellings
+opt.dictionary = opt.dictionary + "/usr/share/dict/words"
 opt.spelllang = { en_au, en_gb }
 
 -- Disable matchparen which jumps the cursor on matching parentheses "
-vim.cmd('let loaded_matchparen = 1')
+vim.cmd("let loaded_matchparen = 1")
 
 -- If RG installed, use it as the vimgrep default
-if vim.fn.executable('rg') == 1 then
-  opt.grepprg = 'rg --vimgrep'
-  opt.grepformat = '%f:%l:%c:%m'
+if vim.fn.executable("rg") == 1 then
+	opt.grepprg = "rg --vimgrep"
+	opt.grepformat = "%f:%l:%c:%m"
 end
 
 -- }}}
 
 -- Folding {{{
 
-opt.foldopen = opt.foldopen + 'jump'
+opt.foldopen = opt.foldopen + "jump"
 opt.foldmethod = "marker"
 opt.foldlevelstart = 0
-opt.foldmarker = '{{{,}}}'
+opt.foldmarker = "{{{,}}}"
 
 -- Set space to toggle folds
-vim.keymap.set({"n", "v"}, "<Space>", "za")
+vim.keymap.set({ "n", "v" }, "<Space>", "za")
 
 -- Make z0 recursively open whatever fold we're in even if it's partially open
 vim.keymap.set("n", "z0", "zcz0")
