@@ -202,12 +202,19 @@ git_purge()
 # vf() { fzf | xargs -r -I % $EDITOR % ;}
 function vf()
 {
-    v "$(fzf --select-1 --exit-0)"
+    # v "$(fzf --select-1 --exit-0)"
+    # fzf --select-1 --exit-0 | xargs -0 -o $VIMPATH
+    fzf --select-1 --exit-0 --bind "enter:become(${VIMPATH} {})"
 }
 
 function vb()
 {
-    vim "$(fd . '/home/zaccam/.bin' | fzf --select-1 --exit-0)"
+    fd . '/home/zaccam/.bin' | fzf --select-1 --exit-0 --bind "enter:become(${VIMPATH} {})"
+}
+
+function vg()
+{
+    rg --line-number . | fzf --delimiter : --nth 3.. --bind "enter:become(${VIMPATH} {1} +{2})"
 }
 
 function mynewcd() {
