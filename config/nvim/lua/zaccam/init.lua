@@ -10,4 +10,3 @@ require("zaccam.display")
 require("zaccam.remap")
 require("zaccam.helpers")
 require("zaccam.commands")
-
