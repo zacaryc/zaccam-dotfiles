@@ -23,6 +23,7 @@ ts.setup({
 	},
 	indent = {
 		enable = true,
+        disable = { 'xml' },
 	},
 	autotag = {
 		enable = true,
