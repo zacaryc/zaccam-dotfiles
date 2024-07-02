@@ -28,12 +28,16 @@ return require("packer").startup(function(use)
 	-- use 'HoNamDuong/hybrid.nvim' -- Treesitter compatible
 	-- use 'ColinKennedy/hybrid2.nvim' -- Treesitter compatible
 	use("folke/tokyonight.nvim")
+	use({
+		"metalelf0/jellybeans-nvim",
+		requires = { "rktjmp/lush.nvim" },
+	})
 	-- use 'marko-cerovac/material.nvim'
 	use("PHSix/nvim-hybrid")
 	-- use 'navarasu/onedark.nvim'
 	-- use 'edeneast/nightfox.nvim'
 	-- use 'olimorris/onedarkpro.nvim'
-	-- use 'rebelot/kanagawa.nvim'
+	use 'rebelot/kanagawa.nvim'
 	use({ "catppuccin/nvim", as = "catppuccin" })
 
 	-- use 'altercation/vim-colors-solarized'
@@ -65,7 +69,8 @@ return require("packer").startup(function(use)
 	--" Tpope godliness
 	use("tpope/vim-fugitive")
 	use("tpope/vim-git")
-	use("tpope/vim-sensible")
+	-- use("tpope/vim-sensible") -- No longer necessary, all settings are either
+    -- in base nvim or in my settings
 	use("tpope/vim-markdown")
 	use("tpope/vim-commentary")
 	use("tpope/vim-surround")
