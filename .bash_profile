@@ -20,7 +20,8 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 function greeting {
-    local hour=$(date +%k)
+    local hour
+    hour=$(date +%k)
 
     if (( hour < 12 )); then
         echo "Доброе утро"
@@ -31,5 +32,9 @@ function greeting {
     fi
 }
 
-echo "$(greeting) Mr. Campbell. You joined PROS $(( ($(date +%s) - $(date +%s -d '2019/07/03')) / 86400 )) days ago"
-echo "There are $(( $(date -d 25-Dec +%j) - $(date +%j))) days until Christmas."
+echo "$(greeting) Mr. Campbell."
+
+if [ -f "${HOME}/.bash_profile_local" ]; then
+    # shellcheck disable=SC1091
+    source "${HOME}/.bash_profile_local"
+fi
