@@ -10,3 +10,7 @@ vim.opt_local.commentstring = "-- %s"
 
 vim.opt_local.fileformat = 'unix'
 vim.opt_local.foldmethod = 'syntax'
+
+vim.cmd[[
+    autocmd BufEnter *.sql ALEDisable
+]]
