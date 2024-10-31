@@ -1,4 +1,6 @@
-require("todo-comments").setup()
+require("todo-comments").setup({
+    signs = false
+})
 
 -- TODO: This is better
 -- WARNING: This is better
