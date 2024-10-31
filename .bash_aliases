@@ -301,7 +301,9 @@ alias cdw='custom_changedir ${HOME}/git/work'
 alias cdp='custom_changedir ${HOME}/git/projects'
 
 alias tf='tmuxinator-fzf-start.sh'
-
+bind -m emacs-standard -x '"\C-x": tf'
+bind -m vi-command -x '"\C-x": tf'
+bind -m vi-insert -x '"\C-x": tf'
 
 if [ -f "${HOME}/.bash_aliases_local" ]; then
     source "${HOME}/.bash_aliases_local"
