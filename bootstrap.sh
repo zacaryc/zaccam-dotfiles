@@ -87,6 +87,8 @@ function debianSetup() {
         git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
         ~/.fzf/install
     fi
+
+    sudo apt-get install $(grep -hv "^#" "${HOME}/zaccam-dotfiles/repofiles.d/debian.pkgs")
 }
 
 
@@ -178,6 +180,8 @@ function sync_repo_list()
     for f in $(find $DOTFILES/repofiles.d/); do
         ln -sf ${f} ${HOME}/.repos.d/
     done
+
+    sudo apt-get install $(grep -hv "^#" "${DOTFILES}/repofiles.d/debian.pkgs")
     # Need to link in fd because an existing program uses the shortcut fd, and
     # thus we have to manually link it - from fd installation page
     [ -z "$(which fdfind)" ] && ln -s "$(which fdfind)" /usr/local/bin/fd
