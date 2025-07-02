@@ -12,7 +12,8 @@ vim.cmd("let g:hybrid_use_Xresources = 1")
 -- Set Colorscheme
 vim.opt.background = 'dark'
 vim.cmd.colorscheme("catppuccin-mocha")
-vim.cmd.colorscheme("hybrid")
+-- vim.cmd.colorscheme("hybrid")
+vim.cmd.colorscheme("jellybeans-nvim")
 
 -- Set List Characters and Fill Characters
 vim.opt.listchars:append {
