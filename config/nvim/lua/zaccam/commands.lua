@@ -87,6 +87,13 @@ if has("autocmd")
     augroup END
 
     "}}}
+    "SMaT Crontabs {{{
+    augroup ft_smatcrontab
+        au!
+
+        au BufRead,BufNewFile cronjobs.txt set filetype=crontab
+    augroup END
+    "}}}
     "Jenkinsfile DSL {{{
     augroup ft_jenkinsfile
         au!
@@ -152,7 +159,6 @@ if has("autocmd")
         autocmd CursorHold,BufWritePost,BufReadPost,BufLeave *
                     \ if !$VIMSWAP && isdirectory(expand("<amatch>:h")) | let &swapfile = &modified | endif
 
-
         if exists('$TMUX') && !exists('$NORENAME')
             au BufEnter * if empty(&buftype) | call system('tmux rename-window '.expand('%:t:S')) | endif
 			au VimLeave * call system('tmux set-window automatic-rename on')
@@ -176,4 +182,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Miscellaneous {{{
 -- She-Bang
 vim.cmd([[inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)]])
+
+-- Set Path
+vim.cmd([[let &path .= "," . system("git rev-parse --show-toplevel 2>/dev/null | tr -d '\\n'") . "/**"]])
 -- }}}
