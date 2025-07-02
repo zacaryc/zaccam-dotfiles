@@ -38,6 +38,7 @@ return require("packer").startup(function(use)
 	-- use 'edeneast/nightfox.nvim'
 	-- use 'olimorris/onedarkpro.nvim'
 	use 'rebelot/kanagawa.nvim'
+	use({ "rose-pine/neovim", as = "rose-pine" })
 	use({ "catppuccin/nvim", as = "catppuccin" })
 
 	-- use 'altercation/vim-colors-solarized'
@@ -69,8 +70,7 @@ return require("packer").startup(function(use)
 	--" Tpope godliness
 	use("tpope/vim-fugitive")
 	use("tpope/vim-git")
-	-- use("tpope/vim-sensible") -- No longer necessary, all settings are either
-    -- in base nvim or in my settings
+	-- use("tpope/vim-sensible") -- No longer necessary, all settings are either in base nvim or in my settings
 	use("tpope/vim-markdown")
 	use("tpope/vim-commentary")
 	use("tpope/vim-surround")
@@ -86,14 +86,32 @@ return require("packer").startup(function(use)
 	use("Konfekt/FastFold")
 
 	--" Lint
-    use("w0rp/ale")
+	use("w0rp/ale")
 
 	--" Syntax
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+
+    --" LSP
+	use({'neovim/nvim-lspconfig',
+        requires = {
+            -- Automatically install LSPs and related tools to stdpath for Neovim
+            { 'williamboman/mason.nvim' }, -- NOTE: Must be loaded before dependants
+            'williamboman/mason-lspconfig.nvim',
+            'WhoIsSethDaniel/mason-tool-installer.nvim',
+
+            -- Useful status updates for LSP.
+            { 'j-hui/fidget.nvim', config = function() require('fidget').setup() end },
+
+            -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
+            -- used for completion, annotations and signatures of Neovim apis
+            { 'folke/neodev.nvim', config = function() require('neodev').setup() end },
+        },
+    })
 
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins
 	if packer_bootstrap then
 		require("packer").sync()
 	end
+
 end)
