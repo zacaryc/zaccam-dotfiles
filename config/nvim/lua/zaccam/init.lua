@@ -2,7 +2,7 @@
 vim.g.mapleader = ';'
 vim.g.maplocalleader = '\\'
 
-require("zaccam.packer")
+require("zaccam.lazy")
 require("zaccam.set")
 require("zaccam.netrw")
 -- require("zaccam.statusline")
