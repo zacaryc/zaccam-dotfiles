@@ -76,6 +76,7 @@ alias cds="cd ~/svn/"
 alias cdv="cd ~/.vim/"
 alias cdc="cd ~/.config/"
 alias cdd="cd ${DOTFILES}"
+alias cdgr="cd $(git root)"
 
 
 ####################
@@ -299,6 +300,7 @@ function custom_changedir()
 }
 alias cdw='custom_changedir ${HOME}/git/work'
 alias cdp='custom_changedir ${HOME}/git/projects'
+alias cdr='custom_changedir ${HOME}/git/reference'
 
 alias tf='tmuxinator-fzf-start.sh'
 bind -m emacs-standard -x '"\C-x": tf'
