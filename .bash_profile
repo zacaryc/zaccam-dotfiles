@@ -32,7 +32,13 @@ function greeting {
     fi
 }
 
-echo "$(greeting) Mr. Campbell."
+echo -e "$(greeting) Mr. Campbell.\n"
+
+# Add custom greeting
+AGE_DAYS=$(( ($(date +%s) - $(date -d 24-Sep-1993 +%s)) / 86400 ))
+echo -e "- You are ${AGE_DAYS} days old, or $(( ${AGE_DAYS} * 100 / 29621 ))%"
+echo -e "- There are $(($(( $(date -d 24-Sep +%j) - $(date +%j) + 365 )) % 365 )) days until you're older"
+echo -e "- There are $(($(( $(date -d 25-Dec +%j) - $(date +%j) + 365 )) % 365 )) days until Christmas"
 
 if [ -f "${HOME}/.bash_profile_local" ]; then
     # shellcheck disable=SC1091
