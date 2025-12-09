@@ -24,7 +24,8 @@ local plugins = {
     --
     -- My plugins here
     "junegunn/goyo.vim",
-    "junegunn/limelight.vim",
+    -- "junegunn/limelight.vim",
+    "folke/twilight.nvim",
     { "junegunn/fzf", build = "./install --all" },
     "junegunn/fzf.vim",
     "kien/rainbow_parentheses.vim",
@@ -37,6 +38,7 @@ local plugins = {
     {
         "metalelf0/jellybeans-nvim",
         dependencies = { "rktjmp/lush.nvim" },
+        lazy = false,
     },
     -- use 'marko-cerovac/material.nvim'
     "PHSix/nvim-hybrid",
@@ -46,6 +48,10 @@ local plugins = {
     'rebelot/kanagawa.nvim',
     { "rose-pine/neovim", name = "rose-pine" },
     { "catppuccin/nvim", name = "catppuccin" },
+	{
+		'nvim-telescope/telescope.nvim', branch = '0.1.x',
+		dependencies = { 'nvim-lua/plenary.nvim' }
+	},
 
     -- use 'altercation/vim-colors-solarized'
     -- use 'vim-airline/vim-airline'
@@ -63,6 +69,7 @@ local plugins = {
 
     {
         "folke/todo-comments.nvim", -- Adds custom highlighting of todo/warning/notes etc
+        event = 'VimEnter',
         dependencies = {
             { "nvim-lua/plenary.nvim" },
         },
@@ -93,16 +100,16 @@ local plugins = {
     "Konfekt/FastFold",
 
     --" Lint
-    "w0rp/ale",
+    -- "w0rp/ale",
 
     --" Syntax
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
 
     --" LSP
-    {'neovim/nvim-lspconfig',
+    { "neovim/nvim-lspconfig",
         dependencies = {
             -- Automatically install LSPs and related tools to stdpath for Neovim
-            { 'williamboman/mason.nvim' }, -- NOTE: Must be loaded before dependants
+            'williamboman/mason.nvim', -- NOTE: Must be loaded before dependants
             'williamboman/mason-lspconfig.nvim',
             'WhoIsSethDaniel/mason-tool-installer.nvim',
 
