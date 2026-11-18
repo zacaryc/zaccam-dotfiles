@@ -384,7 +384,7 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File 
 
 
 ###############################################################################
-### Internet Explorer - At least sensible defaults for it					  #
+### internet explorer - at least sensible defaults for it					  #
 ###############################################################################
 Write-Host "Configuring Internet Explorer..." -ForegroundColor "Yellow"
 
@@ -397,7 +397,13 @@ Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Internet Explorer\Main" "Check_Associ
 # Disable Password Caching [Disable Remember Password]
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" "DisablePasswordCaching" 1
 
-
+###############################################################################
+### Fonts
+###############################################################################
+# winget install --id DEVCOM.JetBrainsMonoNerdFont -e
+# $wt = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
+# New-Item -ItemType Directory -Force $wt | Out-Null
+# Copy-Item "\\wsl$\Ubuntu\home\<you>\zaccam-dotfiles\windows\settings.json" "$wt\settings.json" -Force
 
 #--- Restore Temporary Settings ---
 
