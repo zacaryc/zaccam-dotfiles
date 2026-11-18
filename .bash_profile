@@ -45,4 +45,4 @@ if [ -f "${HOME}/.bash_profile_local" ]; then
     # shellcheck disable=SC1091
     source "${HOME}/.bash_profile_local"
 fi
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
