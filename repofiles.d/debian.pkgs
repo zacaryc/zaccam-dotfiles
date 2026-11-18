@@ -21,6 +21,7 @@ nmap
 # neovim -- build from source
 pandoc
 # python3
+python3-venv
 rename
 ripgrep
 ruby
@@ -30,6 +31,7 @@ sqlformat
 tmuxinator
 tree
 universal-ctags
+unzip
 yamllint
 zip
 
