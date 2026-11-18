@@ -18,7 +18,7 @@ most
 mypy
 nmap
 # npm
-neovim
+# neovim -- build from source
 pandoc
 # python3
 rename
