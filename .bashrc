@@ -43,10 +43,10 @@ fi
 export PATH
 
 if command -V silver &>/dev/null; then
-    PROMPT_COMMAND=silver_prompt
 	silver_prompt() {
 		PS1="$(code=$? jobs=$(jobs -p | wc -l) silver lprint)"
 	}
+    PROMPT_COMMAND=silver_prompt
 	export VIRTUAL_ENV_DISABLE_PROMPT=1
 else
     # Source git prompt niceties
@@ -166,6 +166,9 @@ fi
 if [ -d "$HOME/.bin" ] ; then
     PATH="$HOME/.bin:$PATH"
 fi
+if [ -d "$HOME/.bin/local" ] ; then
+    PATH="$HOME/.bin/local:$PATH"
+fi
 
 # Set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/.local/bin" ] ; then
@@ -190,3 +193,10 @@ export PATH
 
 # Setup fzf
 [ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+. "$HOME/.cargo/env"
