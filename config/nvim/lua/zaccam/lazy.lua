@@ -35,7 +35,7 @@ local plugins = {
             },
         },
     },
-    { "junegunn/fzf", build = "./install --all" },
+    { "junegunn/fzf", build = "./install --bin" },
     "junegunn/fzf.vim",
     { "HiPhish/rainbow-delimiters.nvim", submodules = false },
 
