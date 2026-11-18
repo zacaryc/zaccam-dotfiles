@@ -303,7 +303,12 @@ function install_tmux() {
     command -v tmux >/dev/null || { _error "tmux missing, skipping plugins"; return 1; }
     [ -d "${HOME}/.tmux/plugins/tpm" ] || \
         git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm" || return 1
-    tmux -L bootstrap new-session -d -s _bootstrap
+    tmux -L bootstrap new-session -d -s _bootstrap || return 1
+    # tpm registers itself asynchronously, so wait for it before installing
+    for _ in $(seq 1 50); do
+        tmux -L bootstrap show-environment -g TMUX_PLUGIN_MANAGER_PATH >/dev/null 2>&1 && break
+        sleep 0.2
+    done
     tmux -L bootstrap run-shell "${HOME}/.tmux/plugins/tpm/bin/install_plugins"
     tmux -L bootstrap kill-server
 }
