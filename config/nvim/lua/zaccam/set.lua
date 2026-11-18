@@ -54,7 +54,7 @@ opt.showbreak = " +"
 -- Functionality {{{
 
 -- Add backspace ,start <- to backspace past where you entered insert
-opt.backspace = { indent, eol }
+opt.backspace = { "indent", "eol" }
 
 -- Set Highlight on search, but clear on pressing <Esc> in normal mode
 opt.hlsearch = true
@@ -79,13 +79,13 @@ opt.undofile = true
 -- Decrease Update Time
 opt.updatetime = 250
 
-opt.fileformats = { unix, dos, mac }
+opt.fileformats = { "unix", "dos", "mac" }
 
 vim.keymap.set("n", "<localleader>p", ":set paste!<CR>")
 
 -- Dictionary and Spellings
 opt.dictionary = opt.dictionary + "/usr/share/dict/words"
-opt.spelllang = { en_au, en_gb }
+opt.spelllang = { "en_au", "en_gb" }
 
 -- Disable matchparen which jumps the cursor on matching parentheses "
 vim.cmd("let loaded_matchparen = 1")
