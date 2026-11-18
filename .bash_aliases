@@ -82,13 +82,17 @@ alias cds="cd ~/svn/"
 alias cdv="cd ~/.vim/"
 alias cdc="cd ~/.config/"
 alias cdd="cd ${DOTFILES}"
-alias cdgr="cd $(git root)"
+# alias cdgr="cd $(git root)"
 
 
 ####################
 # FUNCTIONS
 ####################
 
+function cdgitroot() {
+    cd "$(git rev-parse --show-toplevel)";
+}
+alias cdgr=cdgitroot
 
 # `v` with no arguments opens the current directory in Vim, otherwise opens the
 # given location
