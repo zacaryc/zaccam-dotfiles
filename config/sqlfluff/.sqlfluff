@@ -1,0 +1,4 @@
+[sqlfluff]
+dialect = tsql
+# Don't rewrite the case of schema/table/column names
+exclude_rules = CP02
