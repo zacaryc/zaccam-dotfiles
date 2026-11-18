@@ -66,7 +66,6 @@ local plugins = {
     -- use 'vim-airline/vim-airline'
     -- use 'vim-airline/vim-airline-themes'
     "tpope/vim-vinegar",
-    "ryanoasis/vim-devicons",
     {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons", lazy = true },
