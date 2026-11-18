@@ -1,6 +1,7 @@
 #ansible
 #ansible-lint
 bat
+build-essential
 cargo
 cmatrix
 curl
@@ -27,3 +28,4 @@ shellcheck
 sqlformat
 tree
 zip
+
