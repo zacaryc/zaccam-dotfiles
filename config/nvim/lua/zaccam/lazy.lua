@@ -103,7 +103,7 @@ local plugins = {
     -- "w0rp/ale",
 
     --" Syntax
-    { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+    { "nvim-treesitter/nvim-treesitter", branch="master", build = ":TSUpdate" },
 
     --" LSP
     { "neovim/nvim-lspconfig",
