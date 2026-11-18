@@ -58,7 +58,7 @@ local plugins = {
     { "rose-pine/neovim", name = "rose-pine", lazy = true },
     { "catppuccin/nvim", name = "catppuccin" },
     {
-        'nvim-telescope/telescope.nvim', version = '*', branch="master",
+        'nvim-telescope/telescope.nvim', version = '*',
         dependencies = {
             'nvim-lua/plenary.nvim',
             -- optional but recommended
