@@ -391,6 +391,7 @@ fi
 
     __end_block
     PS1+=$__block_text
+    PS1+='\[\e[om\]'
   }
 
   PROMPT_COMMAND=prompt
