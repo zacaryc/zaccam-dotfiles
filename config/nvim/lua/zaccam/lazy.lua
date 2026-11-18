@@ -105,6 +105,41 @@ local plugins = {
     --" Syntax
     { "nvim-treesitter/nvim-treesitter", branch="master", build = ":TSUpdate" },
 
+        -- Formatting: runs the formatters Mason installs, otherwise falls back to the language server
+    {
+        "stevearc/conform.nvim",
+        cmd = "ConformInfo",
+        keys = {
+            { "<leader>cf", function() require("conform").format({ async = true }) end,
+              mode = { "n", "v" }, desc = "[C]ode [F]ormat" },
+        },
+        opts = {
+            formatters = { sqlfluff = { require_cwd = false } },
+            formatters_by_ft = {
+                lua = { "stylua" }, sh = { "shfmt" }, bash = { "shfmt" },
+                sql = { "sqlfluff" }, java = { "google-java-format" }, json = { "jq" },
+            },
+            default_format_opts = { lsp_format = "fallback" },
+        },
+    },
+
+    -- Linting: bashls already runs shellcheck, so it isn't repeated here
+    {
+        "mfussenegger/nvim-lint",
+        event = { "BufReadPost", "BufWritePost" },
+        config = function()
+            local lint = require("lint")
+            lint.linters_by_ft = { yaml = { "yamllint" }, sql = { "sqlfluff" } }
+            vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
+                group = vim.api.nvim_create_augroup("zaccam-lint", { clear = true }),
+                callback = function(ev)
+                    if ev.file:match("/%.github/workflows/.+%.ya?ml$") then lint.try_lint("actionlint") end
+                    lint.try_lint()
+                end,
+            })
+        end,
+    },
+
     --" LSP
     -- Lua LSP support for editing your nvim config (replaces the archived neodev.nvim)
     {
@@ -142,4 +177,3 @@ end
 require("lazy").setup(plugins, {
     performance = { rtp = { paths = parser_dirs } },
 })
--- require("lazy").setup(plugins, {})

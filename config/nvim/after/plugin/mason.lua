@@ -1,24 +1,3 @@
-local DEFAULT_SETTINGS = {
-    -- A list of servers to automatically install if they're not already installed. Example: { "rust_analyzer@nightly", "lua_ls" }
-    -- This setting has no relation with the `automatic_installation` setting.
-    ---@type string[]
-    ensure_installed = { "lua_ls" },
-
-    -- Whether servers that are set up (via lspconfig) should be automatically installed if they're not already installed.
-    -- This setting has no relation with the `ensure_installed` setting.
-    -- Can either be:
-    --   - false: Servers are not automatically installed.
-    --   - true: All servers set up via lspconfig are automatically installed.
-    --   - { exclude: string[] }: All servers set up via lspconfig, except the ones provided in the list, are automatically installed.
-    --       Example: automatic_installation = { exclude = { "rust_analyzer", "solargraph" } }
-    ---@type boolean
-    automatic_installation = false,
-
-    -- See `:h mason-lspconfig.setup_handlers()`
-    ---@type table<string, fun(server_name: string)>?
-    handlers = nil,
-}
-
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
     callback = function(event)
@@ -78,6 +57,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
         --
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
+        if client and client:supports_method('textDocument/completion') then
+            vim.lsp.completion.enable(true, client.id, event.buf, { autotrigger = true })
+        end
         if client and client.server_capabilities.documentHighlightProvider then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -117,25 +99,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
 --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
 --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
 local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'popup' }
 
-require('mason').setup(DEFAULT_SETTINGS)
-local ensure_installed = vim.tbl_keys(servers or {})
-vim.list_extend(ensure_installed, {
-    'stylua', -- Used to format Lua code
-})
+require('mason').setup()
 
+-- Installed on every machine at startup (names are Mason package names, see :Mason).
+-- Language servers are enabled automatically by mason-lspconfig once installed.
+local ensure_installed = {
+    -- language servers
+    'lua-language-server', 'bash-language-server', 'python-lsp-server', 'yaml-language-server',
+    'sqlls', 'jq-lsp', 'clangd',
+    'lemminx',             -- XML
+    'vim-language-server', -- vimscript
+    -- linters and formatters
+    'actionlint', 'shellcheck', 'shfmt', 'sqlfluff', 'yamllint', 'stylua', 'clang-format', 'google-java-format',
+}
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-require('mason-lspconfig').setup({
-    -- handlers = {
-    --     function(server_name)
-    --         local server = servers[server_name] or {}
-    --         -- This handles overriding only values explicitly passed
-    --         -- by the server configuration above. Useful when disabling
-    --         -- certain features of an LSP (for example, turning off formatting for tsserver)
-    --         server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-    --         require('lspconfig')[server_name].setup(server)
-    --     end,
-    -- },
-})
+require('mason-lspconfig').setup {
+    -- stylua is a formatter here (conform runs it); stop it also starting as a language server
+    automatic_enable = { exclude = { 'stylua' } },
+}
