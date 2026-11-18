@@ -50,13 +50,13 @@ function brewsetup() {
 	fi
 
 	# Check if brew is installed
-	if ! which brew >/dev/null; then
+	if ! command -v brew >/dev/null; then
 		# If not installed - install via Ruby
-		if which ruby >/dev/null; then
+		if command -v ruby >/dev/null; then
 		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 		else
 			echo "Cannot install brew, Ruby is not installed"
-			return
+			return 1
 		fi
 	fi
 
@@ -74,24 +74,31 @@ function debianSetup() {
 		return 1
 	fi
 
-    read -p "Wish to update/upgrade via apt-get?" -n 1;
+    sudo apt-get update -qq
+    read -rp "Wish to upgrade via apt-get?" -n 1;
     echo "";
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        sudo apt-get update -qq
+    if [[ $REPLY =${HOME} ^[Yy]$ ]]; then
         sudo apt-get upgrade
         sudo apt-get autoremove
     fi
 
     # In mac this can be done in brew
-    if ! [ -f ~/.fzf ]; then
-        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-        ~/.fzf/install
+    if ! [ -d ${HOME}/.fzf ]; then
+        git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf
+        ${HOME}/.fzf/install --all
     fi
 
     sync_repo_list
 
 }
 
+# Little helper function
+function link() {  # link <src> <dest>
+    if [ -e "$2" ] && [ ! -L "$2" ]; then
+        mv "$2" "$2.bak.$(date +%s)"
+    fi
+    ln -sfn "$1" "$2"
+}
 
 # Install: Quick Bootstrap install of dotfiles
 function install() {
@@ -100,9 +107,9 @@ function install() {
     case $(uname) in
         'Darwin')
             _print_header "This is a mac - Installing with brewfiles"
-            ln -sf ~/zaccam-dotfiles/Brewfile ~/Brewfile
+            ln -sf ${HOME}/zaccam-dotfiles/Brewfile ${HOME}/Brewfile
 			brewsetup
-            [ -f ~/zaccam-dotfiles/.macos ] || source ~/zaccam-dotfiles/.macos
+            [ -f ${HOME}/zaccam-dotfiles/.macos ] && source ${HOME}/zaccam-dotfiles/.macos
             ;;
         'Linux')
             _print_header "This is a linux machine"
@@ -110,16 +117,20 @@ function install() {
             # TODO: Linux Package Support - can also include WSL
             echo "No support for package install yet - TODO"
             ;;
+        *)
+            _print_header "System doesn't match understood case, bailing"
+            exit 1
+            ;;
+
     esac
 
     for dotfile in "${dotfiles[@]}"; do
-        [ -f ~/zaccam-dotfiles/.${dotfile} ] && \
-            ln -sf ~/zaccam-dotfiles/.${dotfile} ~/.${dotfile}
+        [ -f "${HOME}/zaccam-dotfiles/.${dotfile}" ] && \
+            ln -sf "${HOME}/zaccam-dotfiles/.${dotfile}" "${HOME}/.${dotfile}"
     done
-    [ -d ~/zaccam-dotfiles/config ] && \
-        ln -sf ~/zaccam-dotfiles/config ~/.config
-    [ -d ~/zaccam-dotfiles/.bin ] && \
-        ln -sf ~/zaccam-dotfiles/.bin ~/.bin
+
+    link "$DOTFILES/config" "$HOME/.config"
+    link "$DOTFILES/.bin"   "$HOME/.bin"
     _print_header "Dotfiles have been installed!"
 }
 
@@ -127,7 +138,7 @@ function install() {
 ## UPDATE- Update the existing dotfiles via git pull
 function update() {
     _print_header "Updating dotfiles"
-    cd ~/zaccam-dotfiles/ && git pull origin master
+    cd ${HOME}/zaccam-dotfiles/ && git pull origin master
     _print_header "Dotfiles have been updated!"
 }
 
@@ -137,9 +148,9 @@ function backup() {
     check_create_dir "${HOME}/dotfiles.backup"
 
     for dotfile in "${dotfiles[@]}"; do
-        [ -f ~/.${dotfile} ] && cp -vR ~/.${dotfile} ~/dotfiles.backup/
+        [ -f "${HOME}/.${dotfile}" ] && [ ! -L "$HOME/.${dotfile}" ] && cp -vR "${HOME}/.${dotfile}" ${HOME}/dotfiles.backup/
     done
-    [ -d ~/.config ] && cp -vR ~/dotfiles.backup/
+    # [ -d ${HOME}/.config ] && cp -vR ${HOME}/dotfiles.backup/
     _print_header "Dotfiles have been backed up!"
 }
 
@@ -147,7 +158,7 @@ function backup() {
 # from repo that will always cause issues
 function setup_git_details()
 {
-	if ! [ -f ${HOME}/.gitconfig.local ]
+	if ! [ -f "${HOME}/.gitconfig.local" ]
 	then
 		_print_header "Setting up gitconfig"
 
@@ -158,11 +169,11 @@ function setup_git_details()
 		fi
 
 		user ' - What is your git author name?'
-		read -e git_authorname
+		read -er git_authorname
 		user ' - What is your git author email?'
-		read -e git_authoremail
+		read -er git_authoremail
 
-		cat << EOF > ${HOME}/.gitconfig.local
+		cat << EOF > "${HOME}/.gitconfig.local"
 [user]
 	name = ${git_authorname}
 	email = ${git_authoremail}
@@ -178,8 +189,9 @@ EOF
 # Can add local work/related repos to bootstrap as well
 function sync_repo_list()
 {
-    for f in $(find $DOTFILES/repofiles.d/); do
-        ln -sf ${f} ${HOME}/.repos.d/
+    mkdir -p "${HOME}/.repos.d"
+    for f in $DOTFILES/repofiles.d/*; do
+        ln -sfn "${f}" "${HOME}/.repos.d/"
     done
 
     pkgs=()
@@ -192,12 +204,12 @@ function sync_repo_list()
             fi
         done < "${DOTFILES}/repofiles.d/debian.pkgs"
 
-        sudo apt-get install -y "${pkgs[@]}"
+        ((${#pkgs[@]})) && sudo apt-get install -y "${pkgs[@]}"
 
     # Need to link in fd because an existing program uses the shortcut fd, and
     # thus we have to manually link it - from fd installation page
-    [ -z "$(which fdfind)" ] && ln -s "$(which fdfind)" /usr/local/bin/fd
-    [ -f /usr/bin/batcat ] && ln -s /usr/bin/batcat /usr/local/bin/bat
+    command -v fdfind >/dev/null && ln -sf "$(command -v fdfind)" /usr/local/bin/fd
+    command -v batcat >/dev/null && ln -sf /usr/bin/batcat /usr/local/bin/bat
 }
 
 
@@ -205,7 +217,7 @@ function sync_repo_list()
 function check_create_dir()
 {
     dir=$1
-    [ ! -d ${dir} ] && mkdir -p ${dir}
+    [ ! -d "${dir}" ] && mkdir -p "${dir}"
 }
 
 # Setup of folder structures etc
@@ -233,7 +245,7 @@ function install_python() {
 
     if ! command -v python3; then
         _print_header "Installing Python"
-        if which pyenv > /dev/null; then
+        if command -v pyenv > /dev/null; then
             CFLAGS="-I$(brew --prefix openssl)/include" && export CFLAGS
             LDFLAGS="-L$(brew --prefix openssl)/lib" && export LDFLAGS
             PYENV_ROOT="/usr/local/python" && export PYENV_ROOT
@@ -269,16 +281,25 @@ function install_python() {
 function install_tmux()
 {
     # Install tmux package manager tpm and plugins
-	[ ! -d ~/.tmux/plugins/tpm ] \
-		&& git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
-		&& ~/.tmux/plugins/tpm/bin/install_plugins
+	[ ! -d ${HOME}/.tmux/plugins/tpm ] \
+		&& git clone https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm \
+		&& ${HOME}/.tmux/plugins/tpm/bin/install_plugins
+}
+
+# Install tmux
+function install_silver()
+{
+    # Checkout and install silver prompt
+	[ ! -d ${DOTFILES}/.cargo/bin/silver ] \
+		&& git clone https://github.com/zacaryc/silver.git ${HOME}/git/misc/silver \
+		&& cargo install --path "${HOME}/git/misc/silver"
 }
 
 case "$1" in
     "")
         read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1;
         echo "";
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [[ $REPLY =${HOME} ^[Yy]$ ]]; then
             setup;
             backup;
             install;
