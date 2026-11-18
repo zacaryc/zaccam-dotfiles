@@ -6,13 +6,13 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
     local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
     if vim.v.shell_error ~= 0 then
-        vim.api.nvim_echo({
-            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-            { out, "WarningMsg" },
-            { "\nPress any key to exit..." },
-        }, true, {})
-        vim.fn.getchar()
-        os.exit(1)
+    vim.api.nvim_echo({
+        { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+        { out, "WarningMsg" },
+        { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
     end
 end
 vim.opt.rtp:prepend(lazypath)
@@ -21,14 +21,23 @@ vim.g.mapleader = ';'
 vim.g.maplocalleader = '\\'
 
 local plugins = {
-    --
     -- My plugins here
-    "junegunn/goyo.vim",
-    -- "junegunn/limelight.vim",
-    "folke/twilight.nvim",
+    --
+    { "folke/twilight.nvim", lazy = true }, -- dims code for zen-mode
+    {
+        "folke/zen-mode.nvim", -- replaces goyo.vim + limelight.vim
+        cmd = "ZenMode",
+        opts = {
+            window = { width = 80 },
+            plugins = {
+                tmux = { enabled = true },     -- hides the tmux status bar, like your goyo setup did
+                twilight = { enabled = true }, -- dims everything except the current block
+            },
+        },
+    },
     { "junegunn/fzf", build = "./install --all" },
     "junegunn/fzf.vim",
-    "kien/rainbow_parentheses.vim",
+    { "HiPhish/rainbow-delimiters.nvim", submodules = false },
 
     --" UI
     "w0ng/vim-hybrid",
@@ -36,9 +45,9 @@ local plugins = {
     -- use 'ColinKennedy/hybrid2.nvim' -- Treesitter compatible
     "folke/tokyonight.nvim",
     {
-        "metalelf0/jellybeans-nvim",
-        dependencies = { "rktjmp/lush.nvim" },
-        lazy = false,
+    "metalelf0/jellybeans-nvim",
+    dependencies = { "rktjmp/lush.nvim" },
+    lazy = false,
     },
     -- use 'marko-cerovac/material.nvim'
     "PHSix/nvim-hybrid",
@@ -48,10 +57,10 @@ local plugins = {
     'rebelot/kanagawa.nvim',
     { "rose-pine/neovim", name = "rose-pine" },
     { "catppuccin/nvim", name = "catppuccin" },
-	{
-		'nvim-telescope/telescope.nvim', branch = '0.1.x',
-		dependencies = { 'nvim-lua/plenary.nvim' }
-	},
+    {
+        'nvim-telescope/telescope.nvim', branch = '0.1.x',
+        dependencies = { 'nvim-lua/plenary.nvim' }
+    },
 
     -- use 'altercation/vim-colors-solarized'
     -- use 'vim-airline/vim-airline'
@@ -59,8 +68,8 @@ local plugins = {
     "tpope/vim-vinegar",
     "ryanoasis/vim-devicons",
     {
-        "nvim-lualine/lualine.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons", lazy = true },
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons", lazy = true },
     },
 
     --" Edit
@@ -68,11 +77,11 @@ local plugins = {
     -- vim.g.tagbar_sort = 0,
 
     {
-        "folke/todo-comments.nvim", -- Adds custom highlighting of todo/warning/notes etc
-        event = 'VimEnter',
-        dependencies = {
-            { "nvim-lua/plenary.nvim" },
-        },
+    "folke/todo-comments.nvim", -- Adds custom highlighting of todo/warning/notes etc
+    event = 'VimEnter',
+    dependencies = {
+        { "nvim-lua/plenary.nvim" },
+    },
     },
     "preservim/vim-indent-guides",
     "Raimondi/delimitMate",
@@ -105,64 +114,64 @@ local plugins = {
     --" Syntax
     { "nvim-treesitter/nvim-treesitter", branch="master", build = ":TSUpdate" },
 
-        -- Formatting: runs the formatters Mason installs, otherwise falls back to the language server
+    -- Formatting: runs the formatters Mason installs, otherwise falls back to the language server
     {
-        "stevearc/conform.nvim",
-        cmd = "ConformInfo",
-        keys = {
-            { "<leader>cf", function() require("conform").format({ async = true }) end,
-              mode = { "n", "v" }, desc = "[C]ode [F]ormat" },
+    "stevearc/conform.nvim",
+    cmd = "ConformInfo",
+    keys = {
+        { "<leader>cf", function() require("conform").format({ async = true }) end,
+          mode = { "n", "v" }, desc = "[C]ode [F]ormat" },
+    },
+    opts = {
+        formatters = { sqlfluff = { require_cwd = false } },
+        formatters_by_ft = {
+        lua = { "stylua" }, sh = { "shfmt" }, bash = { "shfmt" },
+        sql = { "sqlfluff" }, java = { "google-java-format" }, json = { "jq" },
         },
-        opts = {
-            formatters = { sqlfluff = { require_cwd = false } },
-            formatters_by_ft = {
-                lua = { "stylua" }, sh = { "shfmt" }, bash = { "shfmt" },
-                sql = { "sqlfluff" }, java = { "google-java-format" }, json = { "jq" },
-            },
-            default_format_opts = { lsp_format = "fallback" },
-        },
+        default_format_opts = { lsp_format = "fallback" },
+    },
     },
 
     -- Linting: bashls already runs shellcheck, so it isn't repeated here
     {
-        "mfussenegger/nvim-lint",
-        event = { "BufReadPost", "BufWritePost" },
-        config = function()
-            local lint = require("lint")
-            lint.linters_by_ft = { yaml = { "yamllint" }, sql = { "sqlfluff" } }
-            vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
-                group = vim.api.nvim_create_augroup("zaccam-lint", { clear = true }),
-                callback = function(ev)
-                    if ev.file:match("/%.github/workflows/.+%.ya?ml$") then lint.try_lint("actionlint") end
-                    lint.try_lint()
-                end,
-            })
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPost", "BufWritePost" },
+    config = function()
+        local lint = require("lint")
+        lint.linters_by_ft = { yaml = { "yamllint" }, sql = { "sqlfluff" } }
+        vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
+        group = vim.api.nvim_create_augroup("zaccam-lint", { clear = true }),
+        callback = function(ev)
+            if ev.file:match("/%.github/workflows/.+%.ya?ml$") then lint.try_lint("actionlint") end
+            lint.try_lint()
         end,
+        })
+    end,
     },
 
     --" LSP
     -- Lua LSP support for editing your nvim config (replaces the archived neodev.nvim)
     {
-        "folke/lazydev.nvim",
-        ft = "lua",
-        opts = {
-            library = {
-                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-            },
+    "folke/lazydev.nvim",
+    ft = "lua",
+    opts = {
+        library = {
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
         },
+    },
     },
 
     { "neovim/nvim-lspconfig",
-        dependencies = {
-            -- Automatically install LSPs and related tools to stdpath for Neovim
-            'mason-org/mason.nvim', -- NOTE: Must be loaded before dependants
-            'mason-org/mason-lspconfig.nvim',
-            'WhoIsSethDaniel/mason-tool-installer.nvim',
+    dependencies = {
+        -- Automatically install LSPs and related tools to stdpath for Neovim
+        'mason-org/mason.nvim', -- NOTE: Must be loaded before dependants
+        'mason-org/mason-lspconfig.nvim',
+        'WhoIsSethDaniel/mason-tool-installer.nvim',
 
-            -- Useful status updates for LSP.
-            { 'j-hui/fidget.nvim', config = function() require('fidget').setup() end },
+        -- Useful status updates for LSP.
+        { 'j-hui/fidget.nvim', config = function() require('fidget').setup() end },
 
-        },
+    },
     },
 
 }
