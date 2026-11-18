@@ -64,7 +64,7 @@ local plugins = {
     },
 
     --" Edit
-    "majutsushi/tagbar", -- , { 'on': 'TagbarToggle' }
+    "preservim/tagbar", -- , { 'on': 'TagbarToggle' }
     -- vim.g.tagbar_sort = 0,
 
     {
@@ -74,7 +74,7 @@ local plugins = {
             { "nvim-lua/plenary.nvim" },
         },
     },
-    "nathanaelkane/vim-indent-guides",
+    "preservim/vim-indent-guides",
     "Raimondi/delimitMate",
 
     --"Git
