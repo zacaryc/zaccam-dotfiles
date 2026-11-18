@@ -299,12 +299,13 @@ function install_python() {
 }
 
 # Install tmux
-function install_tmux()
-{
-    # Install tmux package manager tpm and plugins
-    [ ! -d "${HOME}/.tmux/plugins/tpm" ] \
-        && git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm" \
-        && "${HOME}/.tmux/plugins/tpm/bin/install_plugins"
+function install_tmux() {
+    command -v tmux >/dev/null || { _error "tmux missing, skipping plugins"; return 1; }
+    [ -d "${HOME}/.tmux/plugins/tpm" ] || \
+        git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm" || return 1
+    tmux -L bootstrap new-session -d -s _bootstrap
+    tmux -L bootstrap run-shell "${HOME}/.tmux/plugins/tpm/bin/install_plugins"
+    tmux -L bootstrap kill-server
 }
 
 # Checkout and install the silver prompt
@@ -313,8 +314,11 @@ function install_silver() {
     command -v silver >/dev/null && return 0
 
     if ! command -v cargo >/dev/null; then
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
-            | sh -s -- -y --no-modify-path || return 1
+        local rs; rs="$(mktemp)"
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o "$rs" \
+            || { _error "could not download rustup"; return 1; }
+        sh "$rs" -y --no-modify-path || return 1
+        rm -f "$rs"
     fi
 
     local src="${HOME}/git/misc/silver"
