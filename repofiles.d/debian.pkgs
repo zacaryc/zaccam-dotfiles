@@ -7,6 +7,7 @@ cmatrix
 curl
 dos2unix
 exuberant-ctags
+eza
 fd-find
 git-flow
 golang
@@ -26,6 +27,7 @@ ruby
 # rustc
 shellcheck
 sqlformat
+tmuxinator
 tree
 zip
 

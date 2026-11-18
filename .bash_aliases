@@ -8,6 +8,12 @@
 ##
 # System Specific Functions
 ##
+if [ -x "$(command -v eza)" ]; then
+    alias l="eza --color=auto"
+    alias ls="eza --color=auto"
+    alias ll="eza -l --color=auto --icons"
+    alias la="ll -ah"
+    alias tree="eza --icons --tree"
 if [ -x "$(command -v exa)" ]; then
     alias l="exa --color=auto"
     alias ls="exa --color=auto"
