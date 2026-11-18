@@ -5,3 +5,6 @@
 
 # Lazy Lock JSON
 lazy-lock.json
+
+#Tmux resurrect
+.tmux/resurrect
