@@ -181,7 +181,19 @@ function sync_repo_list()
         ln -sf ${f} ${HOME}/.repos.d/
     done
 
-    sudo apt-get install $(grep -hv "^#" "${DOTFILES}/repofiles.d/debian.pkgs")
+    pkgs=()
+    sudo apt-get update
+    while read -r pkg; do
+        [[ -z $pkg || $pkg == \#* ]] && continue
+            if apt-cache show "$pkg" &>/dev/null; then
+                pkgs+=("$pkg")
+            else
+                echo "Skipping unavailable package: $pkg" >&2
+            fi
+        done < "${DOTFILES}/repofiles.d/debian.pkgs"
+
+        sudo apt-get install -y "${pkgs[@]}"
+
     # Need to link in fd because an existing program uses the shortcut fd, and
     # thus we have to manually link it - from fd installation page
     [ -z "$(which fdfind)" ] && ln -s "$(which fdfind)" /usr/local/bin/fd
