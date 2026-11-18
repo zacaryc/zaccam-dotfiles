@@ -8,14 +8,15 @@ curl
 dos2unix
 exuberant-ctags
 eza
+fastfetch
 fd-find
+gh
 git-flow
 golang
 jq
 lastpass-cli
 most
 mypy
-neofetch
 nmap
 # npm
 neovim
@@ -29,5 +30,6 @@ shellcheck
 sqlformat
 tmuxinator
 tree
+yamllint
 zip
 
