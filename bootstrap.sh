@@ -19,15 +19,16 @@ declare -a dotfiles=(
     'tmux.conf'
     'zshrc'
     'dircolors'
+    'ctags'
     'subversion'
     'Xresources'
     'bashrc'
     'bash_aliases'
-    '.bash_alias_completion'
+    'bash_alias_completion'
     'bash_profile'
     'bash_logout'
     'gitconfig'
-    '.git-prompt.sh'
+    'git-prompt.sh'
     'global_gitignore'
     'profile'
     'hushlogin'
@@ -158,7 +159,7 @@ function install() {
 ## UPDATE- Update the existing dotfiles via git pull
 function update() {
     _print_header "Updating dotfiles"
-    git -C "${DOTFILES}" pull origin master
+    git -C "${DOTFILES}" pull --ff-only
     _print_header "Dotfiles have been updated!"
 }
 
@@ -216,7 +217,7 @@ function sync_repo_list()
     done
 
     pkgs=()
-    while read -r pkg; do
+    while read -r pkg _ || [[ -n $pkg ]]; do
         [[ -z $pkg || $pkg == \#* ]] && continue
             if apt-cache show "$pkg" &>/dev/null; then
                 pkgs+=("$pkg")
@@ -229,8 +230,8 @@ function sync_repo_list()
 
     # Need to link in fd because an existing program uses the shortcut fd, and
     # thus we have to manually link it - from fd installation page
-    command -v fdfind >/dev/null && ln -sf "$(command -v fdfind)" "${HOME}/.local/bin/fd"
-    command -v batcat >/dev/null && ln -sf /usr/bin/batcat "${HOME}/.local/bin/bat"
+    command -v fdfind >/dev/null && link "$(command -v fdfind)" "${HOME}/.local/bin/fd"
+    command -v batcat >/dev/null && link "$(command -v batcat)" "${HOME}/.local/bin/bat"
 }
 
 

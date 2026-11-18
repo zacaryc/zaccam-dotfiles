@@ -2,7 +2,7 @@
 #ansible-lint
 bat
 build-essential
-cargo
+# cargo
 cmatrix
 curl
 dos2unix
@@ -23,7 +23,7 @@ pandoc
 rename
 ripgrep
 ruby
-rustc
+# rustc
 shellcheck
 sqlformat
 tree
