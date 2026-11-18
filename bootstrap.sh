@@ -77,7 +77,7 @@ function debianSetup() {
     read -p "Wish to update/upgrade via apt-get?" -n 1;
     echo "";
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        sudo apt-get update
+        sudo apt-get update -qq
         sudo apt-get upgrade
         sudo apt-get autoremove
     fi
@@ -88,7 +88,8 @@ function debianSetup() {
         ~/.fzf/install
     fi
 
-    sudo apt-get install $(grep -hv "^#" "${HOME}/zaccam-dotfiles/repofiles.d/debian.pkgs")
+    sync_repo_list
+
 }
 
 
@@ -182,7 +183,6 @@ function sync_repo_list()
     done
 
     pkgs=()
-    sudo apt-get update
     while read -r pkg; do
         [[ -z $pkg || $pkg == \#* ]] && continue
             if apt-cache show "$pkg" &>/dev/null; then
@@ -223,7 +223,7 @@ function setup() {
     check_create_dir "${HOME}/.bin"
 
     setup_git_details
-    sync_repo_list
+    # sync_repo_list
 	# install_python
 	install_tmux
 }
