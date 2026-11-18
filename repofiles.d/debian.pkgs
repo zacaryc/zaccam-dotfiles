@@ -6,7 +6,6 @@ build-essential
 cmatrix
 curl
 dos2unix
-exuberant-ctags
 eza
 fastfetch
 fd-find
@@ -30,6 +29,7 @@ shellcheck
 sqlformat
 tmuxinator
 tree
+universal-ctags
 yamllint
 zip
 
