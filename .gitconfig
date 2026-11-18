@@ -7,7 +7,8 @@
     excludesfile = ~/.global_gitignore
 [alias]
     co = checkout
-    prettylog = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(yellow)%d%C(reset)' --all
+    prettylog = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(green)(%ar - %ad]%C(reset) %C(white)%s%C(reset) %C(cyan)- %an <%ae>%C(reset)%C(yellow)%d%C(reset)' --all --date=short
+    pl = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(green)(%ar - %ad]%C(reset) %C(white)%s%C(reset) %C(cyan)- %an <%ae>%C(reset)%C(yellow)%d%C(reset)' --all --date=short
     up = !${HOME}/.bin/git-reup
 	root = rev-parse --show-toplevel
 [mergetool]
