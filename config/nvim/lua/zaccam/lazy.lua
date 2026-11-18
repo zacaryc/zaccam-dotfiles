@@ -106,6 +106,17 @@ local plugins = {
     { "nvim-treesitter/nvim-treesitter", branch="master", build = ":TSUpdate" },
 
     --" LSP
+    -- Lua LSP support for editing your nvim config (replaces the archived neodev.nvim)
+    {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = {
+            library = {
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
+
     { "neovim/nvim-lspconfig",
         dependencies = {
             -- Automatically install LSPs and related tools to stdpath for Neovim
@@ -116,12 +127,19 @@ local plugins = {
             -- Useful status updates for LSP.
             { 'j-hui/fidget.nvim', config = function() require('fidget').setup() end },
 
-            -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
-            -- used for completion, annotations and signatures of Neovim apis
-            { 'folke/neodev.nvim', config = function() require('neodev').setup() end },
         },
     },
 
 }
 
-require("lazy").setup(plugins, {})
+-- lazy.nvim resets the runtimepath and only keeps <prefix>/lib/nvim. Packaged Neovims (Debian/Ubuntu)
+-- keep their bundled parsers elsewhere (e.g. /usr/lib/x86_64-linux-gnu/nvim), so remember those dirs.
+local parser_dirs = {}
+for _, dir in ipairs(vim.api.nvim_get_runtime_file("parser/", true)) do
+    table.insert(parser_dirs, (dir:gsub("/parser/?$", "")))
+end
+
+require("lazy").setup(plugins, {
+    performance = { rtp = { paths = parser_dirs } },
+})
+-- require("lazy").setup(plugins, {})
