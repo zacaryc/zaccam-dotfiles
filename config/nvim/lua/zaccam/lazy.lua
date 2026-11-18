@@ -43,23 +43,27 @@ local plugins = {
     "w0ng/vim-hybrid",
     -- use 'HoNamDuong/hybrid.nvim' -- Treesitter compatible
     -- use 'ColinKennedy/hybrid2.nvim' -- Treesitter compatible
-    "folke/tokyonight.nvim",
+    { "folke/tokyonight.nvim", lazy = true },
     {
-    "metalelf0/jellybeans-nvim",
-    dependencies = { "rktjmp/lush.nvim" },
-    lazy = false,
+        "metalelf0/jellybeans-nvim",
+        dependencies = { "rktjmp/lush.nvim" },
+        lazy = false,
     },
     -- use 'marko-cerovac/material.nvim'
-    "PHSix/nvim-hybrid",
+    { "PHSix/nvim-hybrid", lazy = true },
     -- use 'navarasu/onedark.nvim'
     -- use 'edeneast/nightfox.nvim'
     -- use 'olimorris/onedarkpro.nvim'
-    'rebelot/kanagawa.nvim',
-    { "rose-pine/neovim", name = "rose-pine" },
+    { "rebelot/kanagawa.nvim", lazy = true },
+    { "rose-pine/neovim", name = "rose-pine", lazy = true },
     { "catppuccin/nvim", name = "catppuccin" },
     {
-        'nvim-telescope/telescope.nvim', branch = '0.1.x',
-        dependencies = { 'nvim-lua/plenary.nvim' }
+        'nvim-telescope/telescope.nvim', version = '*', branch="master",
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            -- optional but recommended
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+        }
     },
 
     -- use 'altercation/vim-colors-solarized'
