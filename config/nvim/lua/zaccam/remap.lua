@@ -93,8 +93,7 @@ map("i", "?", "?<C-g>u")
 -- }}}
 -- > Visual Mode {{{
 --------------------------------
-map("v", "<Space>", "I<Space><Esc>gv")
---
+
 -- Move highlighted lines up and down with auto indent formatting
 map("v", "J", ":m '>+1<CR>gv=gv")
 map("v", "K", ":m '<-2<CR>gv=gv")
